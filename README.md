@@ -42,6 +42,9 @@ library("cryoCompare")
 
 ## References
 
+<https://cryoetdataportal.czscience.com/datasets/10006?ground_truth=true> -
+for example dataset with ground truth
+
 ## Acknowledgements
 
 ## Package Structure
