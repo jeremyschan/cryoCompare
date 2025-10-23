@@ -1,16 +1,17 @@
 Package: cryoCompare
 Type: Package
-Title: What the Package Does (Title Case)
+Title: cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Jeremy", "Chan",
+      email = "jeremych.chan@mail.utoronto.ca",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: cryoCompare provides tools to retrieve cryo-electron tomography (cryoET) datasets and compare segmentation and denoising algorithms in a unified workflow. 
+  The package streamlines data access, processing, and visualization, allowing users to assess and visualize algorithm performance on real tomographic data.
+License: MIT + file LICENSE
+Depends: R (>= 3.1.0)
 Encoding: UTF-8
 LazyData: true
