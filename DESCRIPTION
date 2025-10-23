@@ -15,6 +15,8 @@ Description: cryoCompare provides tools to retrieve cryo-electron tomography
   visualization, allowing users to assess and visualize algorithm performance 
   on real tomographic data.
 License: MIT + file LICENSE
-Depends: R (>= 3.1.0)
 Encoding: UTF-8
 LazyData: true
+Depends: 
+    R (>= 3.1.0)
+RoxygenNote: 7.3.3
