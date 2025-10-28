@@ -22,42 +22,48 @@
 #' @import autothresholdr
 
 runSegmentation <- function(image_path) {
+  message(sprintf("Reading image %s...\n", image_path))
   img <- ijtiff::read_tif(image_path)
 
+  message(sprintf("Running segmentation algorithms on %s...\n", image_path))
   seg <- thresholdSeg(img)
+
   plot <- plotSegmentationThresholds(seg)
-  plot
+  print(plot)
 }
 
 
-# memBrainSeg <- function(tomogram_path, model_path) {
-#   # Load the pre-trained model
-#   device <- torch::torch_device(if (torch::cuda_is_available()) "cuda" else "cpu")
-#   model_checkpoint <- torch::torch_load(model_path)
-#   model_checkpoint$to(device = torch::torch_device(device))
-#
-#   model_checkpoint$eval()
-#
-#   # Read the tomogram data
-# }
-
-
-thresholdSeg <- function(image_path) {
+thresholdSeg <- function(img) {
   methods <- c("Huang", "Mean", "Otsu", "Triangle")
   thresholds <- stats::setNames(numeric(length(methods)), methods)
   masks <- vector("list", length(methods))
   names(masks) <- methods
 
   for (m in methods) {
+    message(sprintf("Running segmentation method: %s...\n", m))
     thr <- autothresholdr::auto_thresh(img, method = m)
     thresholds[m] <- thr
     masks[[m]] <- img >= thr
   }
 
+  message(sprintf("Segmentation completed.\n"))
   return(list(thresholds = thresholds, masks = masks))
 }
 
-plotSegmentationSlices <- function(seg_result) {}
+
+viewSegmentation <- function(image_path, seg_result, method) {
+  methods <- c("Huang", "Mean", "Otsu", "Triangle")
+  if (!(method %in% methods)) {
+    stop("Invalid segmentation method. Choose from: ", paste(methods, collapse = ", "))
+  }
+
+  message(sprintf("Reading image %s...\n", image_path))
+  img <- ijtiff::read_tif(image_path)
+
+  autothresholdr::auto_thresh(img, method)
+  ijtiff::display(apply_mask(img, method))
+}
+
 
 plotSegmentationThresholds <- function(seg_result) {
   thresholds <- seg_result$thresholds
@@ -74,9 +80,3 @@ plotSegmentationThresholds <- function(seg_result) {
 
   return(plot)
 }
-
-image_path <- "~/TS_001stacked"
-img <- ijtiff::read_tif(image_path)
-autothresholdr::auto_thresh(img, "tri")
-ijtiff::display(autothresholdr::apply_mask(img, "tri"))
-
