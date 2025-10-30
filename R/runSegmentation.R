@@ -17,24 +17,39 @@
 #'
 #' @return TO-DO
 #' @export
-#' @import torch
 #' @import ijtiff
 #' @import autothresholdr
 
-runSegmentation <- function(image_path) {
+runSegmentation <- function(image_path, methods, ground_truth_image_path) {
   message(sprintf("Reading image %s...\n", image_path))
   img <- ijtiff::read_tif(image_path)
 
-  message(sprintf("Running segmentation algorithms on %s...\n", image_path))
-  seg <- thresholdSeg(img)
+  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
+  for (method in methods) {
+    if (!(method %in% available_methods)) {
+      stop("Invalid segmentation method. Choose from: ", paste(available_methods, collapse = ", "))
+    }
+  }
 
-  plot <- plotSegmentationThresholds(seg)
-  print(plot)
+  message(sprintf("Running segmentation algorithms on %s...\n", image_path))
+  seg_result <- thresholdSeg(img, methods)
+  message(sprintf("Segmentation completed.\n"))
+
+  message(sprintf("Visualising segmentation results...\n"))
+  viewSegmentation(img, methods)
+  message(sprintf("Visualisation completed.\n"))
+
+  if (!is.null(ground_truth_image_path)) {
+    message(sprintf("Comparing against ground truth...\n"))
+    ground_truth_img <- ijtiff::read_tif(ground_truth_image_path)
+    plot <- compareGroundTruth(seg_result, ground_truth_img)
+    print(plot)
+    message(sprintf("Comparison completed.\n"))
+  }
 }
 
 
-thresholdSeg <- function(img) {
-  methods <- c("Huang", "Mean", "Otsu", "Triangle")
+thresholdSeg <- function(img, methods) {
   thresholds <- stats::setNames(numeric(length(methods)), methods)
   masks <- vector("list", length(methods))
   names(masks) <- methods
@@ -46,37 +61,56 @@ thresholdSeg <- function(img) {
     masks[[m]] <- img >= thr
   }
 
-  message(sprintf("Segmentation completed.\n"))
   return(list(thresholds = thresholds, masks = masks))
 }
 
 
-viewSegmentation <- function(image_path, seg_result, method) {
-  methods <- c("Huang", "Mean", "Otsu", "Triangle")
-  if (!(method %in% methods)) {
-    stop("Invalid segmentation method. Choose from: ", paste(methods, collapse = ", "))
+viewSegmentation <- function(img, methods) {
+  for (m in methods) {
+    ijtiff::display(autothresholdr::apply_mask(img, m), main = paste("Segmentation using", m))
   }
-
-  message(sprintf("Reading image %s...\n", image_path))
-  img <- ijtiff::read_tif(image_path)
-
-  autothresholdr::auto_thresh(img, method)
-  ijtiff::display(apply_mask(img, method))
 }
 
+compareGroundTruth <- function(seg_result, ground_truth) {
+  dice <- function(a, b) {
+    a <- a != 0
+    b <- b != 0
 
-plotSegmentationThresholds <- function(seg_result) {
-  thresholds <- seg_result$thresholds
+    intersection <- sum(a & b)
+    denominator <- sum(a) + sum(b)
+    return(2 * intersection / denominator)
+  }
 
-  df <- tibble::tibble(methods = names(thresholds),
-                       threshold = as.numeric(thresholds))
+  methods <- names(seg_result$masks)
 
-  plot <- ggplot2::ggplot(df, ggplot2::aes(x = methods, y = threshold)) +
-    ggplot2::geom_bar(stat = "identity", fill = "steelblue") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(title = "Segmentation Thresholds by Method",
-                  x = "Segmentation Method",
-                  y = "Threshold Value")
+  acc <- vapply(
+    methods,
+    function(m) dice(seg_result$masks[[m]], ground_truth) * 100,
+    numeric(1)
+  )
 
-  return(plot)
+  df <- data.frame(
+    method = methods,
+    accuracy_percent = as.numeric(acc),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = stats::reorder(methods, accuracy_percent),
+                                   y = accuracy_percent, fill = method)) +
+      ggplot2::geom_col(width = 0.7) +
+      ggplot2::geom_text(
+        ggplot2::aes(label = paste0(round(accuracy_percent, 1), "%")),
+        hjust = -0.1,
+        size = 3.5,
+        color = "black"
+      ) +
+      ggplot2::coord_flip() +
+      ggplot2::scale_y_continuous(labels = function(x) paste0(round(x, 1), "%"), limits = c(0,100)) +
+      ggplot2::labs(title = "Segmentation accuracy by method",
+                    x = "Method",
+                    y = "Accuracy (%)") +
+      ggplot2::theme_bw() +
+      ggplot2::theme(legend.position = "none")
+
+  return(p)
 }

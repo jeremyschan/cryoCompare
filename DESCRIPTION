@@ -26,5 +26,4 @@ Imports:
     ggplot2,
     ijtiff,
     imager,
-    tibble,
-    torch
+    tibble
