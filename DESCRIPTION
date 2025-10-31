@@ -25,5 +25,4 @@ Imports:
     dplyr,
     ggplot2,
     ijtiff,
-    imager,
-    tibble
+    imager

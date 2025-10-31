@@ -40,7 +40,9 @@
 #' @export
 #' @import ijtiff
 
-runSegmentation <- function(image_path, methods, ground_truth_image_path) {
+runSegmentation <- function(image_path,
+                            methods,
+                            ground_truth_image_path = NULL) {
   message(sprintf("Reading image %s...\n", image_path))
   img <- ijtiff::read_tif(image_path)
 

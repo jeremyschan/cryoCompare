@@ -10,7 +10,7 @@
 #'
 #' @param image_path path to the tomogram file in .tif format
 #'
-#' @return Returns a list containing the original image and the denoised images
+#' @return Returns null, instead saves the denoised images.
 #'
 #' @examples
 #' # Example 1:
@@ -25,6 +25,7 @@
 #' https://www.sid.ir/paper/544308/en
 #' https://www.mia.uni-saarland.de/weickert/Papers/book.pdf
 #'
+#' @export
 #' @import imager
 #' @import ggplot2
 #' @import dplyr
@@ -52,6 +53,18 @@ runDenoising <- function(image_path) {
     anisotropic = blur_anisotropic_denoise
   )
 
+  output_dir <- file.path("inst", "extdata")
+
+  # Define output file paths
+  base_name <- tools::file_path_sans_ext(basename(image_path))
+  gaussian_path <- file.path(output_dir, paste0(base_name, "_gaussian.tif"))
+  median_path <- file.path(output_dir, paste0(base_name, "_median.tif"))
+  anisotropic_path <- file.path(output_dir, paste0(base_name, "_anisotropic.tif"))
+
+  # Save denoised images
+  ijtiff::write_tif(gaussian_denoise, gaussian_path)
+  ijtiff::write_tif(median_denoise, median_path)
+  ijtiff::write_tif(blur_anisotropic_denoise, anisotropic_path)
+
   message(sprintf("Denoising completed.\n"))
-  return(results)
 }
