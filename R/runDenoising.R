@@ -9,14 +9,16 @@
 #' denoising algorithms before passing them into segmentation.
 #'
 #' @param image_path path to the tomogram file in .tif format
+#' @param output_dir optional directory to save the denoised images, otherwise
+#' images will be saved in the data folder of the package
 #'
 #' @return Returns null, instead saves the denoised images.
 #'
 #' @examples
 #' # Example 1:
 #' # Running denoising on a sample tomogram
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif", package = "cryoCompare")
-#' denoised_results <- cryoCompare::runDenoising(image_path)
+#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
+#' denoised_results <- cryoCompare::runDenoising(image_path, tempdir())
 #'
 #' @references
 #' https://cran.r-project.org/web/packages/ijtiff/index.html
@@ -31,20 +33,21 @@
 #' @import dplyr
 #' @import ijtiff
 
-runDenoising <- function(image_path) {
+runDenoising <- function(image_path, output_dir = NULL) {
   message(sprintf("Reading image %s...\n", image_path))
   img <- ijtiff::read_tif(image_path)
   ijtiff::display(img)
 
   message(sprintf("Running denoising algorithms on %s...\n", image_path))
-  gaussian_denoise <- imager::isoblur(img, sigma = 1, gaussian = TRUE) %>%
-    plot(main="Gaussian denoising, sigma = 1")
+  gaussian_denoise <- imager::isoblur(img, sigma = 1, gaussian = TRUE)
+  plot(gaussian_denoise, main="Gaussian denoising, sigma = 1")
 
-  median_denoise <- imager::medianblur(img, n = 5) %>%
-    plot(main="Median denoising, median = 5")
+  median_denoise <- imager::medianblur(img, n = 5)
+  plot(median_denoise, main="Median denoising, median = 5")
 
-  blur_anisotropic_denoise <- imager::blur_anisotropic(img, amplitude = 1e4) %>%
-    plot(main="Anisotropic filter denoising, amplitude = 1e4")
+  blur_anisotropic_denoise <- imager::blur_anisotropic(img, amplitude = 1e4)
+  plot(blur_anisotropic_denoise, main="Anisotropic filter denoising,
+       amplitude = 1e4")
 
   results <- list(
     original = img,
@@ -53,7 +56,9 @@ runDenoising <- function(image_path) {
     anisotropic = blur_anisotropic_denoise
   )
 
-  output_dir <- file.path("inst", "extdata")
+  if(is.null(output_dir)) {
+     output_dir <- file.path("data")
+  }
 
   # Define output file paths
   base_name <- tools::file_path_sans_ext(basename(image_path))
@@ -62,9 +67,28 @@ runDenoising <- function(image_path) {
   anisotropic_path <- file.path(output_dir, paste0(base_name, "_anisotropic.tif"))
 
   # Save denoised images
-  ijtiff::write_tif(gaussian_denoise, gaussian_path)
-  ijtiff::write_tif(median_denoise, median_path)
-  ijtiff::write_tif(blur_anisotropic_denoise, anisotropic_path)
+  gaussian_image <- gaussian_denoise %>%
+    as.array() %>%
+    { as.integer(.) } %>%
+    { dim(.) <- dim(as.array(img)); . }
+
+  median_image <- median_denoise %>%
+    as.array() %>%
+    { as.integer(.) } %>%
+    { dim(.) <- dim(as.array(img)); . }
+
+  blur_anisotropic_image <- blur_anisotropic_denoise %>%
+    as.array() %>%
+    { as.integer(.) } %>%
+    { dim(.) <- dim(as.array(img)); . }
+
+  ijtiff::write_tif(gaussian_image, gaussian_path,
+                    bits_per_sample = 8, overwrite = TRUE)
+  ijtiff::write_tif(median_image, median_path,
+                    bits_per_sample = 8, overwrite = TRUE)
+  ijtiff::write_tif(blur_anisotropic_image, anisotropic_path,
+                    bits_per_sample = 8, overwrite = TRUE)
 
   message(sprintf("Denoising completed.\n"))
+  return()
 }

@@ -17,9 +17,9 @@
 #' # Example 1:
 #' # Running the complete pipeline on a sample tomogram with Otsu and
 #' # Triangle segmentation methods with ground truth
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif",
+#' image_path <- system.file("data", "TS_001.133.tif",
 #'                           package = "cryoCompare")
-#' ground_truth_image_path <- system.file("inst", "extdata",
+#' ground_truth_image_path <- system.file(data",
 #'                                       "TS_001.133_ground_truth.tif",
 #'                                       package = "cryoCompare")
 #' cryoCompare::runPipeline(image_path,
@@ -29,7 +29,7 @@
 #' # Example 2:
 #' # Running the complete pipeline on a sample tomogram with all segmentation
 #' # methods without ground truth
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif",
+#' image_path <- system.file("data", "TS_001.133.tif",
 #'                          package = "cryoCompare")
 #' cryoCompare::runPipeline(image_path,
 #'                         methods = c("Huang", "Mean", "Otsu", "Triangle"))

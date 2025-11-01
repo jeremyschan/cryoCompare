@@ -21,14 +21,16 @@
 #' @examples
 #' # Example 1:
 #' # Segmentation of a tomogram with Otsu and Triangle algorithms without ground truth
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif", package = "cryoCompare")
+#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
 #' cryoCompare::runSegmentation(image_path, methods = c("Otsu", "Triangle"))
 #'
 #' # Example 2:
 #' # Segmentation of a tomogram with all available methods with ground truth
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif", package = "cryoCompare")
-#' ground_truth_image_path <- system.file("inst", "extdata", "TS_001.133_ground_truth.tif", package = "cryoCompare")
-#' cryoCompare::runSegmentation(image_path, methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth_image_path)
+#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
+#' ground_truth_image_path <- system.file("data",
+#' "TS_001.133_ground_truth.tif", package = "cryoCompare")
+#' cryoCompare::runSegmentation(image_path,
+#' methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth_image_path)
 #'
 #' @references
 #' https://www.sciencedirect.com/science/article/abs/pii/0031320394E0043K?via%3Dihub
@@ -65,7 +67,7 @@ runSegmentation <- function(image_path,
   if (!is.null(ground_truth_image_path)) {
     message(sprintf("Comparing against ground truth...\n"))
     ground_truth_img <- ijtiff::read_tif(ground_truth_image_path)
-    plot <- compareGroundTruth(seg_result, ground_truth_img)
+    plot <- .compareGroundTruth(seg_result, ground_truth_img)
     print(plot)
     message(sprintf("Comparison completed.\n"))
   }
@@ -93,7 +95,7 @@ runSegmentation <- function(image_path,
 #' @examples
 #' # Example 1:
 #' # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif", package = "cryoCompare")
+#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
 #' img <- ijtiff::read_tif(image_path)
 #' seg_result <- cryoCompare::thresholdSeg(img, methods = c("Otsu", "Triangle"))
 #'
@@ -115,7 +117,7 @@ thresholdSeg <- function(img, methods) {
   # Run auto-thresholding with each method and store results
   for (m in methods) {
     message(sprintf("Running segmentation method: %s...\n", m))
-    thr <- autothresholdr::auto_thresh(img, method = m)
+    thr <- autothresholdr::auto_thresh(int_arr = img, method = m)
     thresholds[m] <- thr
     masks[[m]] <- img >= thr
   }
@@ -140,7 +142,7 @@ thresholdSeg <- function(img, methods) {
 #' @examples
 #' #' # Example 1:
 #' # Visualising segmentation results using Otsu and Triangle methods
-#' image_path <- system.file("inst", "extdata", "TS_001.133.tif", package = "cryoCompare")
+#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
 #' img <- ijtiff::read_tif(image_path)
 #' cryoCompare::viewSegmentation(img, methods = c("Otsu", "Triangle"))
 #'
