@@ -138,7 +138,7 @@ thresholdSeg <- function(image, methods) {
 #' #' # Example 1:
 #' # Visualising segmentation results using Otsu and Triangle methods
 #' image <- TS_001.133
-#' cryoCompare::viewSegmentation(img, methods = c("Otsu", "Triangle"))
+#' cryoCompare::viewSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
 #' @references
 #' #' https://cran.r-project.org/web/packages/ijtiff/index.html

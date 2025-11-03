@@ -19,7 +19,7 @@
 #' # Running denoising on a sample tomogram
 #'
 #' image <- TS_001.133
-#' cryoCompare::runDenoising(image)
+#' cryoCompare::runDenoising(image, tempdir())
 #'
 #' @references
 #' https://cran.r-project.org/web/packages/ijtiff/index.html

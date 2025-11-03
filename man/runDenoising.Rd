@@ -29,7 +29,7 @@ denoising algorithms before passing them into segmentation.
 # Running denoising on a sample tomogram
 
 image <- TS_001.133
-cryoCompare::runDenoising(image)
+cryoCompare::runDenoising(image, tempdir())
 
 }
 \references{

@@ -8,42 +8,38 @@
 #'
 #' @param image tomogram file to be run through the pipeline
 #' @param methods vector of strings of segmentation methods to apply
+#' @param output_dir optional directory to save the denoised images, otherwise
+#' images will be saved in the data folder of the package
 #' @param ground_truth optional ground truth mask of tomogram file
 #'
-#' @returns Returns null as this is the end of the pipeline
-#'
 #' @examples
-#' # Example 1:
-#' # Running the complete pipeline on a sample tomogram with Otsu and
-#' # Triangle segmentation methods with ground truth
-#' image <- TS_001.133
-#' ground_truth <- TS_001.133_ground_truth
-#' cryoCompare::runPipeline(image,
-#'                         methods = c("Otsu", "Triangle"),
-#'                         ground_truth)
+#' # No examples: this function requires user input
 #'
-#' # Example 2:
-#' # Running the complete pipeline on a sample tomogram with all segmentation
-#' # methods without ground truth
-#' image <- TS_001.133
-#' cryoCompare::runPipeline(image,
-#'                         methods = c("Huang", "Mean", "Otsu", "Triangle"))
+#'
+#' @returns Returns null as this is the end of the pipeline
 #' @export
 
 runPipeline <- function(image,
                         methods,
+                        output_dir = NULL,
                         ground_truth = NULL) {
-  runDenoising(image)
+  runDenoising(image, output_dir)
 
   message(sprintf("Choose an image for segmentation.\n"))
   choice <- readline("Enter 'original', 'gaussian', 'median', or 'anisotropic': ")
 
-  if (choice == 'gaussian') {
-    image_path <- "/data/gaussian.tif"
-  } else if (choice == 'median') {
-    image_path <- "/data/median.tif"
-  } else if (choice == 'anisotropic') {
-    image_path <- "/data/anisotropic.tif"
+  if (is.null(output_dir)) {
+    base_dir <- "data"
+  } else {
+    base_dir <- output_dir
+  }
+
+  if (choice == "gaussian") {
+    image_path <- file.path(base_dir, "gaussian.tif")
+  } else if (choice == "median") {
+    image_path <- file.path(base_dir, "median.tif")
+  } else if (choice == "anisotropic") {
+    image_path <- file.path(base_dir, "anisotropic.tif")
   }
 
   if (choice != 'original') {
