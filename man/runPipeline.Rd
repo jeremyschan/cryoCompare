@@ -4,15 +4,14 @@
 \alias{runPipeline}
 \title{Run Complete Denoising and Segmentation Pipeline}
 \usage{
-runPipeline(image_path, methods, ground_truth_image_path = NULL)
+runPipeline(image, methods, ground_truth = NULL)
 }
 \arguments{
-\item{image_path}{path to the tomogram file in .tif format}
+\item{image}{tomogram file to be run through the pipeline}
 
 \item{methods}{vector of strings of segmentation methods to apply}
 
-\item{ground_truth_image_path}{optional path to the ground truth tomogram
-file in .tif format}
+\item{ground_truth}{optional ground truth mask of tomogram file}
 }
 \value{
 Returns null as this is the end of the pipeline
@@ -23,4 +22,21 @@ format, then prompts the user to select one of the denoised images (or the
 original) for segmentation. It then runs the specified segmentation
 algorithms on the chosen image. This function integrates the denoising and
 segmentation steps into a single pipeline for ease of use.
+}
+\examples{
+# Example 1:
+# Running the complete pipeline on a sample tomogram with Otsu and
+# Triangle segmentation methods with ground truth
+image <- TS_001.133
+ground_truth <- TS_001.133_ground_truth
+cryoCompare::runPipeline(image,
+                        methods = c("Otsu", "Triangle"),
+                        ground_truth)
+
+# Example 2:
+# Running the complete pipeline on a sample tomogram with all segmentation
+# methods without ground truth
+image <- TS_001.133
+cryoCompare::runPipeline(image,
+                        methods = c("Huang", "Mean", "Otsu", "Triangle"))
 }

@@ -4,10 +4,10 @@
 \alias{viewSegmentation}
 \title{Visualise Segmentation Results}
 \usage{
-viewSegmentation(img, methods)
+viewSegmentation(image, methods)
 }
 \arguments{
-\item{img}{tomogram image read into R}
+\item{image}{tomogram image read into R}
 
 \item{methods}{vector of strings of segmentation methods to visualise}
 }
@@ -24,8 +24,7 @@ methods but can also be used independently for visual analysis.
 \examples{
 #' # Example 1:
 # Visualising segmentation results using Otsu and Triangle methods
-image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-img <- ijtiff::read_tif(image_path)
+image <- TS_001.133
 cryoCompare::viewSegmentation(img, methods = c("Otsu", "Triangle"))
 
 }

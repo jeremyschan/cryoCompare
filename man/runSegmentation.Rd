@@ -4,16 +4,15 @@
 \alias{runSegmentation}
 \title{Run Segmentation Pipeline On Tomograms}
 \usage{
-runSegmentation(image_path, methods, ground_truth_image_path = NULL)
+runSegmentation(image, methods, ground_truth = NULL)
 }
 \arguments{
-\item{image_path}{path to the tomogram file in .tif format}
+\item{image}{tomogram file to be run through the pipeline}
 
-\item{methods}{vector of strings of segmentation methods to apply. Choose from
-"Huang", "Mean", "Otsu", and "Triangle"}
+\item{methods}{vector of strings of segmentation methods to apply; choose
+from "Huang", "Mean", "Otsu", and "Triangle"}
 
-\item{ground_truth_image_path}{optional path to the ground truth tomogram
-file in .tif format}
+\item{ground_truth}{optional ground truth mask of tomogram file}
 }
 \value{
 Returns null as this is the end of the pipeline
@@ -32,16 +31,15 @@ if provided.
 \examples{
 # Example 1:
 # Segmentation of a tomogram with Otsu and Triangle algorithms without ground truth
-image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-cryoCompare::runSegmentation(image_path, methods = c("Otsu", "Triangle"))
+image <- TS_001.133
+cryoCompare::runSegmentation(image, methods = c("Otsu", "Triangle"))
 
 # Example 2:
 # Segmentation of a tomogram with all available methods with ground truth
-image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-ground_truth_image_path <- system.file("data",
-"TS_001.133_ground_truth.tif", package = "cryoCompare")
-cryoCompare::runSegmentation(image_path,
-methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth_image_path)
+image <- TS_001.133
+ground_truth <- TS_001.133_ground_truth
+cryoCompare::runSegmentation(image,
+methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth)
 
 }
 \references{

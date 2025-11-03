@@ -10,27 +10,25 @@
 #' algorithms, visualise the results, and compare them against ground truth
 #' if provided.
 #'
-#' @param image_path path to the tomogram file in .tif format
-#' @param methods vector of strings of segmentation methods to apply. Choose from
-#' "Huang", "Mean", "Otsu", and "Triangle"
-#' @param ground_truth_image_path optional path to the ground truth tomogram
-#' file in .tif format
+#' @param image tomogram file to be run through the pipeline
+#' @param methods vector of strings of segmentation methods to apply; choose
+#' from "Huang", "Mean", "Otsu", and "Triangle"
+#' @param ground_truth optional ground truth mask of tomogram file
 #'
 #' @return Returns null as this is the end of the pipeline
 #'
 #' @examples
 #' # Example 1:
 #' # Segmentation of a tomogram with Otsu and Triangle algorithms without ground truth
-#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-#' cryoCompare::runSegmentation(image_path, methods = c("Otsu", "Triangle"))
+#' image <- TS_001.133
+#' cryoCompare::runSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
 #' # Example 2:
 #' # Segmentation of a tomogram with all available methods with ground truth
-#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-#' ground_truth_image_path <- system.file("data",
-#' "TS_001.133_ground_truth.tif", package = "cryoCompare")
-#' cryoCompare::runSegmentation(image_path,
-#' methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth_image_path)
+#' image <- TS_001.133
+#' ground_truth <- TS_001.133_ground_truth
+#' cryoCompare::runSegmentation(image,
+#' methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth)
 #'
 #' @references
 #' https://www.sciencedirect.com/science/article/abs/pii/0031320394E0043K?via%3Dihub
@@ -42,11 +40,10 @@
 #' @export
 #' @import ijtiff
 
-runSegmentation <- function(image_path,
+runSegmentation <- function(image,
                             methods,
-                            ground_truth_image_path = NULL) {
-  message(sprintf("Reading image %s...\n", image_path))
-  img <- ijtiff::read_tif(image_path)
+                            ground_truth = NULL) {
+  message(sprintf("Reading image...\n"))
 
   available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
   for (method in methods) {
@@ -55,19 +52,18 @@ runSegmentation <- function(image_path,
     }
   }
 
-  message(sprintf("Running segmentation algorithms on %s...\n", image_path))
-  seg_result <- thresholdSeg(img, methods)
+  message(sprintf("Running segmentation algorithms...\n"))
+  seg_result <- thresholdSeg(image, methods)
   message(sprintf("Segmentation completed.\n"))
 
   message(sprintf("Visualising segmentation results...\n"))
-  viewSegmentation(img, methods)
+  viewSegmentation(image, methods)
   message(sprintf("Visualisation completed.\n"))
 
   # Only run ground truth comparison when provided
-  if (!is.null(ground_truth_image_path)) {
+  if (!is.null(ground_truth)) {
     message(sprintf("Comparing against ground truth...\n"))
-    ground_truth_img <- ijtiff::read_tif(ground_truth_image_path)
-    plot <- .compareGroundTruth(seg_result, ground_truth_img)
+    plot <- .compareGroundTruth(seg_result, ground_truth)
     print(plot)
     message(sprintf("Comparison completed.\n"))
   }
@@ -86,7 +82,7 @@ runSegmentation <- function(image_path,
 #' it can also be used independently for obtaining masks and thresholding values
 #' for further analysis.
 #'
-#' @param img tomogram image read into R
+#' @param image tomogram image read into R
 #' @param methods vector of strings of segmentation methods to apply
 #'
 #' @return Returns a list containing the mask and threshold values for each
@@ -95,9 +91,8 @@ runSegmentation <- function(image_path,
 #' @examples
 #' # Example 1:
 #' # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
-#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-#' img <- ijtiff::read_tif(image_path)
-#' seg_result <- cryoCompare::thresholdSeg(img, methods = c("Otsu", "Triangle"))
+#' image <- TS_001.133
+#' seg_result <- cryoCompare::thresholdSeg(image, methods = c("Otsu", "Triangle"))
 #'
 #' @references
 #' https://cran.r-project.org/web/packages/ijtiff/index.html
@@ -108,7 +103,7 @@ runSegmentation <- function(image_path,
 #' @import autothresholdr
 #' @import ijtiff
 
-thresholdSeg <- function(img, methods) {
+thresholdSeg <- function(image, methods) {
   # Set names and lengths of thresholds and masks according to the methods
   thresholds <- stats::setNames(numeric(length(methods)), methods)
   masks <- vector("list", length(methods))
@@ -117,9 +112,9 @@ thresholdSeg <- function(img, methods) {
   # Run auto-thresholding with each method and store results
   for (m in methods) {
     message(sprintf("Running segmentation method: %s...\n", m))
-    thr <- autothresholdr::auto_thresh(int_arr = img, method = m)
+    thr <- autothresholdr::auto_thresh(int_arr = image, method = m)
     thresholds[m] <- thr
-    masks[[m]] <- img >= thr
+    masks[[m]] <- image >= thr
   }
 
   return(list(thresholds = thresholds, masks = masks))
@@ -134,7 +129,7 @@ thresholdSeg <- function(img, methods) {
 #' the segmentation pipeline to visualise the results of different segmentation
 #' methods but can also be used independently for visual analysis.
 #'
-#' @param img tomogram image read into R
+#' @param image tomogram image read into R
 #' @param methods vector of strings of segmentation methods to visualise
 #'
 #' @return Returns null as this function is used for visualisation only.
@@ -142,8 +137,7 @@ thresholdSeg <- function(img, methods) {
 #' @examples
 #' #' # Example 1:
 #' # Visualising segmentation results using Otsu and Triangle methods
-#' image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-#' img <- ijtiff::read_tif(image_path)
+#' image <- TS_001.133
 #' cryoCompare::viewSegmentation(img, methods = c("Otsu", "Triangle"))
 #'
 #' @references
@@ -154,10 +148,11 @@ thresholdSeg <- function(img, methods) {
 #' @import ijtiff
 #' @import autothresholdr
 
-viewSegmentation <- function(img, methods) {
+viewSegmentation <- function(image, methods) {
   # Display segmentation masks on the image for each method
   for (m in methods) {
-    ijtiff::display(autothresholdr::apply_mask(img, m), main = paste("Segmentation using", m))
+    ijtiff::display(autothresholdr::apply_mask(image, m),
+                    main = paste("Segmentation using", m))
   }
 
   return()

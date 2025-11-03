@@ -4,10 +4,13 @@
 \alias{runDenoising}
 \title{Apply Denoising Algorithms To Tomograms}
 \usage{
-runDenoising(image_path, output_dir = NULL)
+runDenoising(image, output_dir = NULL)
 }
 \arguments{
-\item{image_path}{path to the tomogram file in .tif format}
+\item{image}{tomogram file to be denoised}
+
+\item{output_dir}{optional directory to save the denoised images, otherwise
+images will be saved in the data folder of the package}
 }
 \value{
 Returns null, instead saves the denoised images.
@@ -24,8 +27,9 @@ denoising algorithms before passing them into segmentation.
 \examples{
 # Example 1:
 # Running denoising on a sample tomogram
-image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-denoised_results <- cryoCompare::runDenoising(image_path, tempdir())
+
+image <- TS_001.133
+cryoCompare::runDenoising(image)
 
 }
 \references{

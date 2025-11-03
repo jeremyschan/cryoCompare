@@ -4,10 +4,10 @@
 \alias{thresholdSeg}
 \title{Apply Thresholding Segmentation Methods}
 \usage{
-thresholdSeg(img, methods)
+thresholdSeg(image, methods)
 }
 \arguments{
-\item{img}{tomogram image read into R}
+\item{image}{tomogram image read into R}
 
 \item{methods}{vector of strings of segmentation methods to apply}
 }
@@ -27,9 +27,8 @@ for further analysis.
 \examples{
 # Example 1:
 # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
-image_path <- system.file("data", "TS_001.133.tif", package = "cryoCompare")
-img <- ijtiff::read_tif(image_path)
-seg_result <- cryoCompare::thresholdSeg(img, methods = c("Otsu", "Triangle"))
+image <- TS_001.133
+seg_result <- cryoCompare::thresholdSeg(image, methods = c("Otsu", "Triangle"))
 
 }
 \references{
