@@ -64,8 +64,35 @@ The author of this package is Jeremy Chan. The example data is derived from the 
 
 
 ## References
-https://cryoetdataportal.czscience.com/datasets/10006?ground_truth=true - for example dataset with ground truth
+``` r
+Barthelme, S. (2025). imager: Image processing library based on ‘CImg’. https://CRAN.R-project.org/package=imager
 
+Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+
+Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
+
+Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the measures of fuzziness. Pattern Recognition, 28(1), 41-51. https://doi.org/10.1016/0031-3203(94)E0043-K.
+
+Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
+
+Ke, Z., Oton, J., Qu, K., Cortese, M., Zila, V., McKeane, L., Nakane, T., Zivanov, J., Neufeldt, C. J., Cerikan, B., Lu, J. M., Peukes, J., Xiong, X., Kräusslich, H., Scheres, S. H. W., Bartenschlager, R., & Briggs, J. A. G. (2020). Structured and distributions of SARS-CoV-2 spike proteins on intact virions. Nature, 588, 498-502. https://doi.org/10.1038/s41586-020-2665-2
+
+Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic thresholding from the gradients of region boundaries. Journal of Microscopy, 265(2), 185-195. https://doi.org/10.1111/jmi.12474
+
+Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings of the Royal Society B: Biological Sciences, 207(1167): 187-217. https://doi.org/10.1098/rspb.1980.0020
+
+Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633. https://doi.org/10.21105/joss.00633
+
+Otsu, N. (1979). A threshold selection method from gray-level histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66. https://doi.org/10.1109/TSMC.1979.4310076
+
+Weickert, J. (1998). Anisotropic diffusion in image processing. Stuttgart: Teubner.
+
+Wickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag New York. https://ggplot2.tidyverse.org
+
+Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. https://CRAN.R-project.org/package=dplyr
+
+Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry, 25(7), 741-753. https://doi.org/10.1177/25.7.70454
+```
 
 ## Acknowledgements
 This package was developed as part of an assessment for Fall 2025 BCB410H: Applied Bioinformatics course at the University of Toronto. `cryoCompare` welcome issues, enhancement requests, and other contributions. To submit an issue, use GitHub issues. 
@@ -86,6 +113,7 @@ The package tree structure is provided below:
      |- TS_001.133_ground_truth.tif
   |- inst
      |- extdata
+        |- readme_img.png
   |- man
      |- runDenoising.Rd
      |- runSegmentation.Rd
@@ -97,6 +125,13 @@ The package tree structure is provided below:
     |- runPipeline.R
     |- runSegmentation.R
   |- vignettes
+    |- Introduction_cryoCompare.Rmd
   |- tests
-  
+     |- testthat
+         |- test-runDenoising.R
+         |- test-runSegmentation.R
+         |- test-thresholdSeg.R
+         |- test-viewSegmentation.R
+         |- test-runPipeline.R
+    |- testthat.R
 ```

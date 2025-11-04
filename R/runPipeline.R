@@ -15,7 +15,6 @@
 #' @examples
 #' # No examples: this function requires user input
 #'
-#'
 #' @returns Returns null as this is the end of the pipeline
 #' @export
 

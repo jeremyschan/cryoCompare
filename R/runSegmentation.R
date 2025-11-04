@@ -31,11 +31,21 @@
 #' methods = c("Huang", "Mean", "Otsu", "Triangle"), ground_truth)
 #'
 #' @references
-#' https://www.sciencedirect.com/science/article/abs/pii/0031320394E0043K?via%3Dihub
-#' https://www.sciencedirect.com/science/article/abs/pii/S1049965283710400?via%3Dihub
-#' https://ieeexplore.ieee.org/document/4310076
-#' https://journals.sagepub.com/doi/10.1177/25.7.70454
-#' https://cran.r-project.org/web/packages/ijtiff/index.html
+#' Glasbey, C. A. (1993). An analysis of histogram-based thresholding
+#' algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537.
+#' https://doi.org/10.1006/cgip.1993.1040
+#' Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the
+#' measures of fuzziness. Pattern Recognition, 28(1), 41-51.
+#' https://doi.org/10.1016/0031-3203(94)E0043-K.
+#' Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
+#' I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+#' https://doi.org/10.21105/joss.00633
+#' Otsu, N. (1979). A threshold selection method from gray-level histograms.
+#' IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66.
+#' https://doi.org/10.1109/TSMC.1979.4310076
+#' Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement of
+#' sister chromatid exchange frequency. Journal of Histochemistry &
+#' Cytochemistry, 25(7), 741-753. https://doi.org/10.1177/25.7.70454
 #'
 #' @export
 #' @import ijtiff
@@ -95,9 +105,12 @@ runSegmentation <- function(image,
 #' seg_result <- cryoCompare::thresholdSeg(image, methods = c("Otsu", "Triangle"))
 #'
 #' @references
-#' https://cran.r-project.org/web/packages/ijtiff/index.html
-#' https://cran.r-project.org/web/packages/autothresholdr/index.html
-#' https://imagej.net/plugins/auto-threshold
+#' Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic
+#' thresholding from the gradients of region boundaries. Journal of Microscopy,
+#' 265(2), 185-195. https://doi.org/10.1111/jmi.12474
+#' Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
+#' I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+#' https://doi.org/10.21105/joss.00633
 #'
 #' @export
 #' @import autothresholdr
@@ -141,8 +154,12 @@ thresholdSeg <- function(image, methods) {
 #' cryoCompare::viewSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
 #' @references
-#' #' https://cran.r-project.org/web/packages/ijtiff/index.html
-#' https://cran.r-project.org/web/packages/autothresholdr/index.html
+#' Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic
+#' thresholding from the gradients of region boundaries. Journal of Microscopy,
+#' 265(2), 185-195. https://doi.org/10.1111/jmi.12474
+#' Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
+#' I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+#' https://doi.org/10.21105/joss.00633
 #'
 #' @export
 #' @import ijtiff
@@ -174,8 +191,10 @@ viewSegmentation <- function(image, methods) {
 #' segmentation method compared to the ground truth
 #'
 #' @references
-#' https://cran.r-project.org/web/packages/ggplot2/index.html
-#' https://www.jstor.org/stable/1932409
+#' Dice, L. R. (1945). Measures of the amount of ecological association between
+#' species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+#' Wickham, H. (2016). ggplot2: Elegant graphics for data analysis.
+#' Springer-Verlag New York. https://ggplot2.tidyverse.org
 #'
 #' @import ggplot2
 
