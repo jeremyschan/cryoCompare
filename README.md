@@ -13,14 +13,13 @@ BCB410H: Applied Bioinformatics and the Qu Lab.
 ## Description
 
 cryoCompare is an R package designed to analyse cryo-electron tomography
-(cryo-ET) data by retrieving tomograms from the CryoET Data Portal and
-comparing the performance of segmentation and denoising algorithms. It
-improves current bioinformatics workflows by providing a streamlined,
-standardised way to access algorithm accuracy and visualise differences
-across denoising and segmeentation methods, which has not previously
-been available in R. The package was developed using
-`R version 4.4.2 (2024-10-31)`, `Platform: aarch64-apple-darwin20`, and
-`Running under: macOS 26.0.1`.
+(cryo-ET) data by comparing the performance of segmentation and
+denoising algorithms. It improves current bioinformatics workflows by
+providing a streamlined, standardised way to access algorithm accuracy
+and visualise differences across denoising and segmentation methods,
+which has not previously been available in R. The package was developed
+using `R version 4.4.2 (2024-10-31)`,
+`Platform: aarch64-apple-darwin20`, and `Running under: macOS 26.0.1`.
 
 cryoCompare was developed as part of the BCB410H: Applied Bioinformatics
 course at the University of Toronto, and for the Qu Lab at the National
@@ -61,7 +60,17 @@ The package contains some sample data from the CZ Biohub. Refer to the
 package vignettes for more details. An overview of the package is
 illustrated below.
 
+![](./inst/extdata/readme_img.png)
+
 ## Contributions
+
+The author of this package is Jeremy Chan. The example data is derived
+from the Cryo-ET Data Portal by CZ Biohub submitted by Ke et al. (2018).
+The denoising algorithms are implemented using the `imager` package. The
+segmentation algorithms are implemented using the `ijtiff` and
+`autothresholdr` packages. Visualisation is done using base R plotting
+functions and `ggplot2`. Generative AI was used for proofreading, code
+optimisation, and assistance in writing documentation.
 
 ## References
 

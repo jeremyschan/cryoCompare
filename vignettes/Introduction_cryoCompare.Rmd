@@ -1,0 +1,79 @@
+---
+title: "An introduction to cryoCompare!"
+author: "Jeremy Chan"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction_cryoCompare}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+`cryoCompare` is an R package designed to analyse cryo-electron tomography (cryo-ET) data by comparing the performance of segmentation and denoising algorithms. It improves current bioinformatics workflows by providing a streamlined, standardised way to access algorithm accuracy and visualise differences across denoising and segmentation methods.
+
+To download **cryoCompare**, use the following commands:
+``` r
+require("devtools")
+devtools::install_github("jeremyschan/cryoCompare", build_vignettes = TRUE)
+library("cryoCompare")
+```
+
+To list all functions in the package, use:
+``` r
+ls("package:cryoCompare")
+```
+
+## Sample Data
+The package contains some sample data from the CZ Biohub, accessible from the links in the citation in the README file. To load the sample data, see the applications section below.
+
+## Applications
+To get more information about a specific function, the help documentation will be helpful:
+``` {r, }
+library(cryoCompare)
+?cryoCompare::runPipeline
+```
+
+As an example, we will use the `runPipeline` function to run the complete denoising and segmentation pipeline on sample data included in the package.
+
+First, we will load the sample tomogram data:
+``` {r, }
+data("TS_001.133")
+```
+
+Note that the tomogram data should be loaded in as a *ijtiff_img* object. This can be done by running the following command:
+``` {r, }
+library(ijtiff)
+sample_tomogram <- ijtiff:read_tif(your_path_to_tif_file)
+```
+
+Next, we will run the `runPipeline` function on the sample tomogram using Gaussian and Median segmentation methods:
+``` {r, }
+runPipeline(image = TS_001.133, 
+                      methods = c("Huang", "Mean"))
+```
+Note that there are four segmentation methods available: "Otsu", "Triangle", "Huang", and "Mean".
+
+The command will show the denoised images for each methods, then prompt you to select which one you would like to input into the segmentation step. After selecting the denoising method, the function will display the segmentation results for each segmentation method. These results include visualisations of the segmented tomograms and an accuracy metric through the Dice Coefficient.
+
+We can also run the pipeline with a ground truth mask to compare the segmentation accuracy:
+``` {r, }
+data("TS_001.133_ground_truth")
+runPipeline(image = TS_001.133,
+                      methods = c("Otsu", "Triangle"),
+                      ground_truth = TS_001.133_ground_truth)
+```
+This will allow us to see how well each segmentation method performed against the ground truth data.
+
+We can also choose to use the functions within the pipeline individually. For example, we can run just the denoising step using the `runDenoising` function:
+``` {r, }
+runDenoising(image = TS_001.133)
+```
+For more details on how to run each function, refer to the documentation for each function.

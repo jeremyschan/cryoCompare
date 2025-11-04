@@ -54,5 +54,7 @@ runPipeline <- function(image,
     runSegmentation(chosen_image, methods)
   }
 
-  return()
+  return(invisible(NULL))
 }
+
+# [END]

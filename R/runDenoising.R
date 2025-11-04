@@ -89,6 +89,7 @@ runDenoising <- function(image, output_dir = NULL) {
                     bits_per_sample = 8, overwrite = TRUE)
 
   message(sprintf("Denoising completed.\n"))
-  return()
+  return(invisible(NULL))
 }
 
+# [END]

@@ -68,7 +68,7 @@ runSegmentation <- function(image,
     message(sprintf("Comparison completed.\n"))
   }
 
-  return()
+  return(invisible(NULL))
 }
 
 
@@ -155,7 +155,7 @@ viewSegmentation <- function(image, methods) {
                     main = paste("Segmentation using", m))
   }
 
-  return()
+  return(invisible(NULL))
 }
 
 
@@ -229,3 +229,5 @@ viewSegmentation <- function(image, methods) {
 
   return(p)
 }
+
+# [END]

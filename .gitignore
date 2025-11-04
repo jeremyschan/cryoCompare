@@ -8,3 +8,4 @@ TS_003.mrc
 TS_004.mrc
 segmentation_membrain.ckpt
 models/
+inst/doc
