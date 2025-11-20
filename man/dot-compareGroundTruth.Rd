@@ -23,6 +23,8 @@ the segmentation output is required for comparison, this function is
 private and only used within the segmentation pipeline.
 }
 \references{
-https://cran.r-project.org/web/packages/ggplot2/index.html
-https://www.jstor.org/stable/1932409
+Dice, L. R. (1945). Measures of the amount of ecological association between
+species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+Wickham, H. (2016). ggplot2: Elegant graphics for data analysis.
+Springer-Verlag New York. https://ggplot2.tidyverse.org
 }

@@ -29,6 +29,10 @@ cryoCompare::viewSegmentation(image, methods = c("Otsu", "Triangle"))
 
 }
 \references{
-#' https://cran.r-project.org/web/packages/ijtiff/index.html
-https://cran.r-project.org/web/packages/autothresholdr/index.html
+Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic
+thresholding from the gradients of region boundaries. Journal of Microscopy,
+265(2), 185-195. https://doi.org/10.1111/jmi.12474
+Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
+I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+https://doi.org/10.21105/joss.00633
 }

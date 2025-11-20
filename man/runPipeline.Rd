@@ -29,5 +29,4 @@ segmentation steps into a single pipeline for ease of use.
 \examples{
 # No examples: this function requires user input
 
-
 }

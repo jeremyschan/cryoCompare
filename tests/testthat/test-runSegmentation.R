@@ -17,7 +17,7 @@ test_that("runSegmentation validates methods and runs thresholding", {
     testthat::expect_null(result)
   },
   viewSegmentation = function(image, methods) {invisible(NULL)},
-  thresholdSeg = function(image, methods) {
+  thresholdSegmentation = function(image, methods) {
     thresholds <- stats::setNames(numeric(length(methods)), methods)
     masks <- vector("list", length(methods))
     names(masks) <- methods

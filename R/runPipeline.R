@@ -41,7 +41,7 @@ runPipeline <- function(image,
     image_path <- file.path(base_dir, "anisotropic.tif")
   }
 
-  if (choice != 'original') {
+  if (choice != "original") {
     chosen_image <- ijtiff::read_tif(image_path)
   } else {
     chosen_image <- image

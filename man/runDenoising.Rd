@@ -33,9 +33,17 @@ cryoCompare::runDenoising(image, tempdir())
 
 }
 \references{
-https://cran.r-project.org/web/packages/ijtiff/index.html
-https://cran.r-project.org/web/packages/imager/index.html
-https://pubmed.ncbi.nlm.nih.gov/6102765/
-https://www.sid.ir/paper/544308/en
-https://www.mia.uni-saarland.de/weickert/Papers/book.pdf
+Barthelme, S. (2025). imager: Image processing library based on ‘CImg’.
+https://CRAN.R-project.org/package=imager
+Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median
+filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal
+Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
+Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings of
+the Royal Society B: Biological Sciences, 207(1167): 187-217.
+https://doi.org/10.1098/rspb.1980.0020
+Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
+I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+https://doi.org/10.21105/joss.00633
+Weickert, J. (1998). Anisotropic diffusion in image processing.
+Stuttgart: Teubner.
 }

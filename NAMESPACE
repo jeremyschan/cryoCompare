@@ -3,7 +3,7 @@
 export(runDenoising)
 export(runPipeline)
 export(runSegmentation)
-export(thresholdSeg)
+export(thresholdSegmentation)
 export(viewSegmentation)
 import(autothresholdr)
 import(dplyr)

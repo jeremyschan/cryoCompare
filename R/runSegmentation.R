@@ -63,7 +63,7 @@ runSegmentation <- function(image,
   }
 
   message(sprintf("Running segmentation algorithms...\n"))
-  seg_result <- thresholdSeg(image, methods)
+  seg_result <- thresholdSegmentation(image, methods)
   message(sprintf("Segmentation completed.\n"))
 
   message(sprintf("Visualising segmentation results...\n"))
@@ -102,7 +102,7 @@ runSegmentation <- function(image,
 #' # Example 1:
 #' # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
 #' image <- TS_001.133
-#' seg_result <- cryoCompare::thresholdSeg(image, methods = c("Otsu", "Triangle"))
+#' seg_result <- cryoCompare::thresholdSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
 #' @references
 #' Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic
@@ -116,7 +116,7 @@ runSegmentation <- function(image,
 #' @import autothresholdr
 #' @import ijtiff
 
-thresholdSeg <- function(image, methods) {
+thresholdSegmentation <- function(image, methods) {
   # Set names and lengths of thresholds and masks according to the methods
   thresholds <- stats::setNames(numeric(length(methods)), methods)
   masks <- vector("list", length(methods))

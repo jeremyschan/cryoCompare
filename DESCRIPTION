@@ -9,11 +9,11 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: cryoCompare provides tools to retrieve cryo-electron tomography 
-  (cryoET) datasets and compare segmentation and denoising algorithms in a 
-  unified workflow. The package streamlines data access, processing, and 
-  visualization, allowing users to assess and visualize algorithm performance 
-  on real tomographic data.
+Description: cryoCompare provides tools to compare cryo-electron tomography 
+  (cryoET) datasets through segmentation and denoising algorithms in a 
+  unified workflow. The package streamlines processing andvisualization, 
+  allowing users to assess and visualize algorithm performance on real 
+  tomographic data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

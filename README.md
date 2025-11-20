@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cryoCompare
+# cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms
 
 <!-- badges: start -->
 
@@ -44,15 +44,18 @@ data(package = "cryoCompare")
 browseVignettes("cryoCompare")
 ```
 
-`cryoCompare` contains 5 functions: 1. ***runPipeline*** for running the
-complete denoising and segmentation pipeline
+`cryoCompare` contains 5 functions:
+
+1.  ***runPipeline*** for running the complete denoising and
+    segmentation pipeline
 
 2.  ***runDenoising*** for applying denoising algorithms to tomograms
 
 3.  ***runSegmentation*** for applying segmentation algorithms to
     tomograms
 
-4.  ***thresholdSeg*** for threshold-based segmentation of tomograms
+4.  ***thresholdSegmentation*** for threshold-based segmentation of
+    tomograms
 
 5.  ***viewSegmentation*** for visualising segmentation results
 
@@ -132,7 +135,7 @@ The package tree structure is provided below:
      |- runDenoising.Rd
      |- runSegmentation.Rd
      |- viewSegmentation.Rd
-     |- thresholdSeg.Rd
+     |- thresholdSegmentation.Rd
      |- runPipeline.Rd
   |- R
     |- runDenoising.R
@@ -144,7 +147,7 @@ The package tree structure is provided below:
      |- testthat
          |- test-runDenoising.R
          |- test-runSegmentation.R
-         |- test-thresholdSeg.R
+         |- test-thresholdSegmentation.R
          |- test-viewSegmentation.R
          |- test-runPipeline.R
     |- testthat.R

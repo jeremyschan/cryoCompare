@@ -9,7 +9,7 @@ test_that("thresholdSeg returns thresholds and masks for methods", {
 
   methods <- c("Otsu", "Triangle")
 
-  results <- thresholdSeg(image = img, methods = methods)
+  results <- thresholdSegmentation(image = img, methods = methods)
 
   testthat::expect_type(results, "list")
   testthat::expect_named(results, c("thresholds", "masks"))
