@@ -15,15 +15,18 @@ from "Huang", "Mean", "Otsu", and "Triangle"}
 \item{ground_truth}{optional ground truth mask of tomogram file}
 }
 \value{
-Returns null as this is the end of the pipeline
+Returns a data frame containing the DICE similarity coefficient for
+each segmentation method compared to the ground truth, if provided. Otherwise,
+returns NULL.
 }
 \description{
 This function will run segmentation algorithms on the specified tomograms
 (must be in .tif format). It is preferred that the tomograms are already
 denoised, as segmentation algorithms typically perform better on denoised
 data. The function supports multiple segmentation algorithms, including
-various traditional image thresholding methods including Huang (), Mean (),
-Otsu (), and Triangle (). This function will read the tiff tomogram file,
+various traditional image thresholding methods including Huang
+(Huang & Wang, 1995), Mean (Glasbey, 1993), Otsu (1979), and Triangle
+(Zack et al., 1977). This function will read the tiff tomogram file,
 then send the results to other functions to apply the specified segmentation
 algorithms, visualise the results, and compare them against ground truth
 if provided.

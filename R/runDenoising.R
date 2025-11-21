@@ -10,7 +10,11 @@
 #'
 #' @param image tomogram file to be denoised
 #' @param output_dir optional directory to save the denoised images, otherwise
-#' images will be saved in the data folder of the package
+#' images will be saved in the inst/extdata folder of the package
+#' @param gaussian_sigma optional standard deviation for Gaussian blur, default
+#' set to 1
+#' @param median_size optional window size of the median filter, default set
+#' to 5
 #'
 #' @return Returns null, instead saves the denoised images.
 #'
@@ -22,8 +26,10 @@
 #' cryoCompare::runDenoising(image, tempdir())
 #'
 #' @references
-#' Barthelme, S. (2025). imager: Image processing library based on ‘CImg’.
-#' https://CRAN.R-project.org/package=imager
+#' Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010).
+#' EBImage - an R package for image processing with applications to
+#' cellular phenotypes. Bioinformatics, 26(7), 979-981.
+#' https://doi.org/10.1093/bioinformatics/btq046
 #' Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median
 #' filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal
 #' Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
@@ -33,67 +39,75 @@
 #' Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
 #' I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
 #' https://doi.org/10.21105/joss.00633
-#' Weickert, J. (1998). Anisotropic diffusion in image processing.
-#' Stuttgart: Teubner.
 #'
 #' @export
-#' @import imager
+#' @importFrom ijtiff display as_EBImage write_tif
+#' @importFrom EBImage gblur medianFilter is.Image
 #' @import ggplot2
 #' @import dplyr
-#' @import ijtiff
 
-runDenoising <- function(image, output_dir = NULL) {
+runDenoising <- function(image, output_dir = NULL,
+                         gaussian_sigma = 1, median_size = 5) {
+  # Input validation
+  if (!EBImage::is.Image(image)) {
+    image <- ijtiff::as_EBImage(image)
+  }
+
+  if (!file.exists(output_dir)) {
+    dir.create(output_dir)
+  }
+
+  if (!is.numeric(gaussian_sigma) || gaussian_sigma <= 0) {
+    stop("gaussian_sigma must be a positive integer.")
+  }
+
+  if (!is.numeric(median_size) || median_size <= 0) {
+    stop("median_size must be a positive integer.")
+  }
+
+  # Run denoising algorithms and plot them out
   message(sprintf("Reading image...\n"))
   ijtiff::display(image)
 
   message(sprintf("Running denoising algorithms...\n"))
-  gaussian_denoise <- imager::isoblur(image, sigma = 1, gaussian = TRUE)
-  plot(gaussian_denoise, main="Gaussian denoising, sigma = 1")
+  gaussian_denoise <- EBImage::gblur(image, sigma = gaussian_sigma)
+  ijtiff::display(gaussian_denoise)
+  title("Gaussian denoising, sigma = 1")
 
-  median_denoise <- imager::medianblur(image, n = 5)
-  plot(median_denoise, main="Median denoising, median = 5")
-
-  blur_anisotropic_denoise <- imager::blur_anisotropic(image, amplitude = 1e4)
-  plot(blur_anisotropic_denoise, main="Anisotropic filter denoising,
-       amplitude = 1e4")
+  median_denoise <- EBImage::medianFilter(image, size = median_size)
+  ijtiff::display(median_denoise)
+  title("Median denoising, size = 5")
 
   results <- list(
     original = image,
     gaussian = gaussian_denoise,
-    median = median_denoise,
-    anisotropic = blur_anisotropic_denoise
+    median = median_denoise
   )
 
   if(is.null(output_dir)) {
-     output_dir <- file.path("data")
+     output_dir <- file.path("inst/extdata")
   }
 
   # Define output file paths
   gaussian_path <- file.path(output_dir, "gaussian.tif")
   median_path <- file.path(output_dir, "median.tif")
-  anisotropic_path <- file.path(output_dir, "anisotropic.tif")
 
   # Save denoised images
   gaussian_image <- gaussian_denoise %>%
     as.array() %>%
+    { . * 100 } %>%
     { as.integer(.) } %>%
     { dim(.) <- dim(as.array(image)); . }
 
   median_image <- median_denoise %>%
     as.array() %>%
-    { as.integer(.) } %>%
-    { dim(.) <- dim(as.array(image)); . }
-
-  blur_anisotropic_image <- blur_anisotropic_denoise %>%
-    as.array() %>%
+    { . * 100 } %>%
     { as.integer(.) } %>%
     { dim(.) <- dim(as.array(image)); . }
 
   ijtiff::write_tif(gaussian_image, gaussian_path,
                     bits_per_sample = 8, overwrite = TRUE)
   ijtiff::write_tif(median_image, median_path,
-                    bits_per_sample = 8, overwrite = TRUE)
-  ijtiff::write_tif(blur_anisotropic_image, anisotropic_path,
                     bits_per_sample = 8, overwrite = TRUE)
 
   message(sprintf("Denoising completed.\n"))

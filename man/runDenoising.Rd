@@ -4,13 +4,19 @@
 \alias{runDenoising}
 \title{Apply Denoising Algorithms To Tomograms}
 \usage{
-runDenoising(image, output_dir = NULL)
+runDenoising(image, output_dir = NULL, gaussian_sigma = 1, median_size = 5)
 }
 \arguments{
 \item{image}{tomogram file to be denoised}
 
 \item{output_dir}{optional directory to save the denoised images, otherwise
-images will be saved in the data folder of the package}
+images will be saved in the inst/extdata folder of the package}
+
+\item{gaussian_sigma}{optional standard deviation for Gaussian blur, default
+set to 1}
+
+\item{median_size}{optional window size of the median filter, default set
+to 5}
 }
 \value{
 Returns null, instead saves the denoised images.
@@ -33,8 +39,10 @@ cryoCompare::runDenoising(image, tempdir())
 
 }
 \references{
-Barthelme, S. (2025). imager: Image processing library based on ‘CImg’.
-https://CRAN.R-project.org/package=imager
+Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010).
+EBImage - an R package for image processing with applications to
+cellular phenotypes. Bioinformatics, 26(7), 979-981.
+https://doi.org/10.1093/bioinformatics/btq046
 Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median
 filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal
 Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
@@ -44,6 +52,4 @@ https://doi.org/10.1098/rspb.1980.0020
 Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF
 I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
 https://doi.org/10.21105/joss.00633
-Weickert, J. (1998). Anisotropic diffusion in image processing.
-Stuttgart: Teubner.
 }

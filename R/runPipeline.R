@@ -22,10 +22,37 @@ runPipeline <- function(image,
                         methods,
                         output_dir = NULL,
                         ground_truth = NULL) {
+  # Input validation
+  if (!inherits(image, "ijtiff_img")) {
+    stop("Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  for (method in methods) {
+    if (!(method %in% available_methods)) {
+      stop("Invalid segmentation method. Choose from: ",
+           paste(available_methods, collapse = ", "))
+    }
+  }
+
+  if (!file.exists(output_dir)) {
+    dir.create(output_dir)
+  }
+
+  if (!is.null(ground_truth) && !inherits(ground_truth, "ijtiff_img")) {
+    stop("Ground truth mask must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  # Begin pipeline
   runDenoising(image, output_dir)
 
   message(sprintf("Choose an image for segmentation.\n"))
-  choice <- readline("Enter 'original', 'gaussian', 'median', or 'anisotropic': ")
+  valid <- c("original", "gaussian", "median")
+  choice <- readline("Enter 'original', 'gaussian', or 'median': ")
+  while (!(choice %in% valid)) {
+    choice <- readline("Invalid choice. Please enter 'original', 'gaussian', or 'median': ")
+  }
 
   if (is.null(output_dir)) {
     base_dir <- "data"
@@ -37,8 +64,6 @@ runPipeline <- function(image,
     image_path <- file.path(base_dir, "gaussian.tif")
   } else if (choice == "median") {
     image_path <- file.path(base_dir, "median.tif")
-  } else if (choice == "anisotropic") {
-    image_path <- file.path(base_dir, "anisotropic.tif")
   }
 
   if (choice != "original") {

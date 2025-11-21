@@ -20,12 +20,13 @@ LazyData: true
 Depends: 
     R (>= 3.5)
 RoxygenNote: 7.3.3
-Imports: 
+biocViews:
+Imports:
     autothresholdr,
     dplyr,
+    EBImage,
     ggplot2,
-    ijtiff,
-    imager
+    ijtiff
 Suggests: 
     knitr,
     rmarkdown,

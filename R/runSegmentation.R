@@ -4,8 +4,9 @@
 #' (must be in .tif format). It is preferred that the tomograms are already
 #' denoised, as segmentation algorithms typically perform better on denoised
 #' data. The function supports multiple segmentation algorithms, including
-#' various traditional image thresholding methods including Huang (), Mean (),
-#' Otsu (), and Triangle (). This function will read the tiff tomogram file,
+#' various traditional image thresholding methods including Huang
+#' (Huang & Wang, 1995), Mean (Glasbey, 1993), Otsu (1979), and Triangle
+#' (Zack et al., 1977). This function will read the tiff tomogram file,
 #' then send the results to other functions to apply the specified segmentation
 #' algorithms, visualise the results, and compare them against ground truth
 #' if provided.
@@ -15,7 +16,9 @@
 #' from "Huang", "Mean", "Otsu", and "Triangle"
 #' @param ground_truth optional ground truth mask of tomogram file
 #'
-#' @return Returns null as this is the end of the pipeline
+#' @return Returns a data frame containing the DICE similarity coefficient for
+#' each segmentation method compared to the ground truth, if provided. Otherwise,
+#' returns NULL.
 #'
 #' @examples
 #' # Example 1:
@@ -53,12 +56,33 @@
 runSegmentation <- function(image,
                             methods,
                             ground_truth = NULL) {
+  # Input validation
+  if (!inherits(image, "ijtiff_img")) {
+    stop("Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
+  for (method in methods) {
+    if (!(method %in% available_methods)) {
+      stop("Invalid segmentation method. Choose from: ",
+           paste(available_methods, collapse = ", "))
+    }
+  }
+
+  if (!is.null(ground_truth) && !inherits(ground_truth, "ijtiff_img")) {
+    stop("Ground truth mask must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  # Begin segmentation pipeline
   message(sprintf("Reading image...\n"))
 
   available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
   for (method in methods) {
     if (!(method %in% available_methods)) {
-      stop("Invalid segmentation method. Choose from: ", paste(available_methods, collapse = ", "))
+      stop("Invalid segmentation method. Choose from: ",
+           paste(available_methods, collapse = ", "))
     }
   }
 
@@ -70,15 +94,19 @@ runSegmentation <- function(image,
   viewSegmentation(image, methods)
   message(sprintf("Visualisation completed.\n"))
 
+  result <- NULL
+
   # Only run ground truth comparison when provided
   if (!is.null(ground_truth)) {
     message(sprintf("Comparing against ground truth...\n"))
-    plot <- .compareGroundTruth(seg_result, ground_truth)
-    print(plot)
+    gt_comparison <- .compareGroundTruth(seg_result, ground_truth)
+    print(gt_comparison$p)
     message(sprintf("Comparison completed.\n"))
+
+    result <- gt_comparison$dice_score
   }
 
-  return(invisible(NULL))
+  return(result)
 }
 
 
@@ -117,6 +145,20 @@ runSegmentation <- function(image,
 #' @import ijtiff
 
 thresholdSegmentation <- function(image, methods) {
+  # Input validation
+  if (!inherits(image, "ijtiff_img")) {
+    stop("Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
+  for (method in methods) {
+    if (!(method %in% available_methods)) {
+      stop("Invalid segmentation method. Choose from: ",
+           paste(available_methods, collapse = ", "))
+    }
+  }
+
   # Set names and lengths of thresholds and masks according to the methods
   thresholds <- stats::setNames(numeric(length(methods)), methods)
   masks <- vector("list", length(methods))
@@ -166,6 +208,20 @@ thresholdSegmentation <- function(image, methods) {
 #' @import autothresholdr
 
 viewSegmentation <- function(image, methods) {
+  # Input validation
+  if (!inherits(image, "ijtiff_img")) {
+    stop("Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif().")
+  }
+
+  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
+  for (method in methods) {
+    if (!(method %in% available_methods)) {
+      stop("Invalid segmentation method. Choose from: ",
+           paste(available_methods, collapse = ", "))
+    }
+  }
+
   # Display segmentation masks on the image for each method
   for (m in methods) {
     ijtiff::display(autothresholdr::apply_mask(image, m),
@@ -222,14 +278,14 @@ viewSegmentation <- function(image, methods) {
   )
 
   # Create a data frame for plotting with ggplot
-  df <- data.frame(
+  dice_score <- data.frame(
     method = methods,
     accuracy_percent = as.numeric(acc),
     stringsAsFactors = FALSE
   )
 
   # Generate bar plot using ggplot2
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = stats::reorder(methods, accuracy_percent),
+  p <- ggplot2::ggplot(dice_score, ggplot2::aes(x = stats::reorder(methods, accuracy_percent),
                                    y = accuracy_percent, fill = method)) +
       ggplot2::geom_col(width = 0.7) +
       ggplot2::geom_text(
@@ -246,7 +302,7 @@ viewSegmentation <- function(image, methods) {
       ggplot2::theme_bw() +
       ggplot2::theme(legend.position = "none")
 
-  return(p)
+  return(list(dice_score = dice_score, p = p))
 }
 
 # [END]

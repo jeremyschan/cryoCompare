@@ -69,8 +69,8 @@ illustrated below.
 
 The author of this package is Jeremy Chan. The example data is derived
 from the Cryo-ET Data Portal by CZ Biohub submitted by Ke et al. (2018).
-The denoising algorithms are implemented using the `imager` package. The
-segmentation algorithms are implemented using the `ijtiff` and
+The denoising algorithms are implemented using the `EBImage` package.
+The segmentation algorithms are implemented using the `ijtiff` and
 `autothresholdr` packages. Visualisation is done using base R plotting
 functions and `ggplot2`. Generative AI was used for proofreading, code
 optimisation, and assistance in writing documentation.
@@ -78,11 +78,11 @@ optimisation, and assistance in writing documentation.
 ## References
 
 ``` r
-Barthelme, S. (2025). imager: Image processing library based on ‘CImg’. https://CRAN.R-project.org/package=imager
-
 Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
 
 Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
+
+Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010). EBImage - an R package for image processing with applications to cellular phenotypes. Bioinformatics, 26(7), 979-981. https://doi.org/10.1093/bioinformatics/btq046
 
 Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the measures of fuzziness. Pattern Recognition, 28(1), 41-51. https://doi.org/10.1016/0031-3203(94)E0043-K.
 
