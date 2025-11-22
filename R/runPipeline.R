@@ -15,7 +15,9 @@
 #' @examples
 #' # No examples: this function requires user input
 #'
-#' @returns Returns null as this is the end of the pipeline
+#' @returns Returns a data frame containing the DICE similarity coefficient for
+#' each segmentation method compared to the ground truth, if provided. Otherwise,
+#' returns NULL.
 #' @export
 
 runPipeline <- function(image,
@@ -28,6 +30,7 @@ runPipeline <- function(image,
          Please read the .tif file using ijtiff::read_tif().")
   }
 
+  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
   for (method in methods) {
     if (!(method %in% available_methods)) {
       stop("Invalid segmentation method. Choose from: ",
@@ -35,8 +38,10 @@ runPipeline <- function(image,
     }
   }
 
-  if (!file.exists(output_dir)) {
-    dir.create(output_dir)
+  if (!is.null(output_dir)) {
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir)
+    }
   }
 
   if (!is.null(ground_truth) && !inherits(ground_truth, "ijtiff_img")) {
@@ -45,40 +50,61 @@ runPipeline <- function(image,
   }
 
   # Begin pipeline
-  runDenoising(image, output_dir)
+  suppressWarnings({
+    gaussian_choice <- read("Enter a value for Gaussian sigma: ")
+    gaussian_choice <- as.numeric(gaussian_choice)
+    while (is.na(gaussian_choice) || gaussian_choice <= 0) {
+      gaussian_choice <- read("Invalid input. Please enter a positive number for Gaussian sigma: ")
+      gaussian_choice <- as.numeric(gaussian_choice)
+    }
+
+    median_choice <- read("Enter a value for Median filter size: ")
+    median_choice <- as.numeric(median_choice)
+    while (is.na(median_choice) || median_choice <= 0) {
+      median_choice <- read("Invalid input. Please enter a positive number for Median filter size: ")
+      median_choice <- as.numeric(median_choice)
+    }
+  })
+
+  runDenoising(image, output_dir, gaussian_choice, median_choice)
 
   message(sprintf("Choose an image for segmentation.\n"))
   valid <- c("original", "gaussian", "median")
-  choice <- readline("Enter 'original', 'gaussian', or 'median': ")
-  while (!(choice %in% valid)) {
-    choice <- readline("Invalid choice. Please enter 'original', 'gaussian', or 'median': ")
+  seg_choice <- read("Enter 'original', 'gaussian', or 'median': ")
+  while (!(seg_choice %in% valid)) {
+    seg_choice <- read("Invalid choice. Please enter 'original', 'gaussian', or 'median': ")
   }
 
   if (is.null(output_dir)) {
-    base_dir <- "data"
+    base_dir <- "inst/extdata"
   } else {
     base_dir <- output_dir
   }
 
-  if (choice == "gaussian") {
+  if (seg_choice == "gaussian") {
     image_path <- file.path(base_dir, "gaussian.tif")
-  } else if (choice == "median") {
+  } else if (seg_choice == "median") {
     image_path <- file.path(base_dir, "median.tif")
   }
 
-  if (choice != "original") {
+  if (seg_choice != "original") {
     chosen_image <- ijtiff::read_tif(image_path)
   } else {
     chosen_image <- image
   }
 
   if (!is.null(ground_truth)) {
-    runSegmentation(chosen_image, methods, ground_truth)
+    results <- runSegmentation(chosen_image, methods, ground_truth)
   } else {
-    runSegmentation(chosen_image, methods)
+    results <- runSegmentation(chosen_image, methods)
   }
 
-  return(invisible(NULL))
+  return(results)
+}
+
+# Wrap base::readline() for testing
+read <- function(prompt = "") {
+  return(base::readline(prompt))
 }
 
 # [END]

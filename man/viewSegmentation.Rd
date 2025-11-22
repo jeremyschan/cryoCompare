@@ -24,6 +24,7 @@ methods but can also be used independently for visual analysis.
 \examples{
 #' # Example 1:
 # Visualising segmentation results using Otsu and Triangle methods
+data("TS_001.133", package = "cryoCompare")
 image <- TS_001.133
 cryoCompare::viewSegmentation(image, methods = c("Otsu", "Triangle"))
 

@@ -22,6 +22,7 @@
 #' # Example 1:
 #' # Running denoising on a sample tomogram
 #'
+#' data("TS_001.133", package = "cryoCompare")
 #' image <- TS_001.133
 #' cryoCompare::runDenoising(image, tempdir())
 #'
@@ -47,14 +48,16 @@
 #' @import dplyr
 
 runDenoising <- function(image, output_dir = NULL,
-                         gaussian_sigma = 1, median_size = 5) {
+                         gaussian_sigma = 1, median_size = 3) {
   # Input validation
   if (!EBImage::is.Image(image)) {
     image <- ijtiff::as_EBImage(image)
   }
 
-  if (!file.exists(output_dir)) {
-    dir.create(output_dir)
+  if (!is.null(output_dir)) {
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir)
+    }
   }
 
   if (!is.numeric(gaussian_sigma) || gaussian_sigma <= 0) {
@@ -68,15 +71,16 @@ runDenoising <- function(image, output_dir = NULL,
   # Run denoising algorithms and plot them out
   message(sprintf("Reading image...\n"))
   ijtiff::display(image)
+  title("Original tomogram")
 
   message(sprintf("Running denoising algorithms...\n"))
   gaussian_denoise <- EBImage::gblur(image, sigma = gaussian_sigma)
   ijtiff::display(gaussian_denoise)
-  title("Gaussian denoising, sigma = 1")
+  title(paste("Gaussian denoising, sigma = ", gaussian_sigma))
 
   median_denoise <- EBImage::medianFilter(image, size = median_size)
   ijtiff::display(median_denoise)
-  title("Median denoising, size = 5")
+  title(paste("Median denoising, size = ", median_size))
 
   results <- list(
     original = image,
@@ -98,12 +102,14 @@ runDenoising <- function(image, output_dir = NULL,
     { . * 100 } %>%
     { as.integer(.) } %>%
     { dim(.) <- dim(as.array(image)); . }
+  gaussian_image <- aperm(gaussian_image, c(2, 1, 3))
 
   median_image <- median_denoise %>%
     as.array() %>%
     { . * 100 } %>%
     { as.integer(.) } %>%
     { dim(.) <- dim(as.array(image)); . }
+  median_image <- aperm(median_image, c(2, 1, 3))
 
   ijtiff::write_tif(gaussian_image, gaussian_path,
                     bits_per_sample = 8, overwrite = TRUE)

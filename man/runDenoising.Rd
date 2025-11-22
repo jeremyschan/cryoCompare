@@ -4,7 +4,7 @@
 \alias{runDenoising}
 \title{Apply Denoising Algorithms To Tomograms}
 \usage{
-runDenoising(image, output_dir = NULL, gaussian_sigma = 1, median_size = 5)
+runDenoising(image, output_dir = NULL, gaussian_sigma = 1, median_size = 3)
 }
 \arguments{
 \item{image}{tomogram file to be denoised}
@@ -34,6 +34,7 @@ denoising algorithms before passing them into segmentation.
 # Example 1:
 # Running denoising on a sample tomogram
 
+data("TS_001.133", package = "cryoCompare")
 image <- TS_001.133
 cryoCompare::runDenoising(image, tempdir())
 

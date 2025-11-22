@@ -1,21 +1,54 @@
-test_that("thresholdSeg returns thresholds and masks for methods", {
-  # Create a mock image
-  img_mat <- matrix(as.integer(1:100), nrow = 10, ncol = 10)
-  img_arr <- array(img_mat, dim = c(10, 10, 1, 1))
-  td <- tempdir(check = TRUE)
-  src <- file.path(td, "test_image.tif")
-  ijtiff::write_tif(img_arr, src, bits_per_sample = 8, overwrite = TRUE)
-  img <- ijtiff::read_tif(src)
+# Test user input validation
+test_that("thresholdSegmentation errors for non ijtiff_img input", {
+  fake_img <- matrix(1:4, nrow = 2)
+
+  expect_error(
+    thresholdSegmentation(fake_img, methods = "Otsu"),
+    "Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif()."
+  )
+})
+
+test_that("thresholdSegmentation errors for invalid segmentation methods", {
+  fake_img <- structure(list(), class = "ijtiff_img")
+
+  expect_error(
+    thresholdSegmentation(fake_img, methods = "InvalidMethod"),
+    "Invalid segmentation method. Choose from: Huang, Mean, Otsu, Triangle"
+  )
+})
+
+# Test output structure
+test_that("thresholdSegmentation returns correct structure", {
+  img <- array(
+    data = c(1, 2, 3, 4),
+    dim = c(2, 2)
+  )
+  class(img) <- "ijtiff_img"
 
   methods <- c("Otsu", "Triangle")
 
-  results <- thresholdSegmentation(image = img, methods = methods)
+  result <- suppressMessages(thresholdSegmentation(img, methods))
 
-  testthat::expect_type(results, "list")
-  testthat::expect_named(results, c("thresholds", "masks"))
-  testthat::expect_true(all(names(results$thresholds) == methods))
-  testthat::expect_true(all(names(results$masks) == methods))
-  testthat::expect_type(results$thresholds, "double")
+  # Correct outer structure
+  expect_type(result, "list")
+  expect_named(result, c("thresholds", "masks"))
+
+  # Thresholds part
+  expect_true(is.numeric(result$thresholds))
+  expect_equal(names(result$thresholds), methods)
+  expect_length(result$thresholds, length(methods))
+
+  # Masks part
+  expect_true(is.list(result$masks))
+  expect_equal(names(result$masks), methods)
+  expect_length(result$masks, length(methods))
+
+  # Each mask is type logical and same size as input
+  for (m in methods) {
+    expect_type(result$masks[[m]], "logical")
+    expect_equal(dim(result$masks[[m]]), dim(img))
+  }
 })
 
 # [END]

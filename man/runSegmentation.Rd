@@ -34,11 +34,15 @@ if provided.
 \examples{
 # Example 1:
 # Segmentation of a tomogram with Otsu and Triangle algorithms without ground truth
+
+data("TS_001.133", package = "cryoCompare")
 image <- TS_001.133
 cryoCompare::runSegmentation(image, methods = c("Otsu", "Triangle"))
 
 # Example 2:
 # Segmentation of a tomogram with all available methods with ground truth
+data("TS_001.133", package = "cryoCompare")
+data("TS_001.133_ground_truth", package = "cryoCompare")
 image <- TS_001.133
 ground_truth <- TS_001.133_ground_truth
 cryoCompare::runSegmentation(image,

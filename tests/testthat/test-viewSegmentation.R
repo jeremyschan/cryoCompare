@@ -1,30 +1,36 @@
-test_that("viewSegmentation calls display for each requested method", {
-  # Create a mock image
-  img_mat <- matrix(as.integer(1:100), nrow = 10, ncol = 10)
-  img_arr <- array(img_mat, dim = c(10, 10, 1, 1))
-  td <- tempdir(check = TRUE)
-  src <- file.path(td, "test_image.tif")
-  ijtiff::write_tif(img_arr, src, bits_per_sample = 8, overwrite = TRUE)
-  img <- ijtiff::read_tif(src)
+# Test user input validation
+test_that("viewSegmentation errors for non ijtiff_img input", {
+  fake_img <- matrix(1:4, nrow = 2)
+
+  expect_error(
+    viewSegmentation(fake_img, methods = "Otsu"),
+    "Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif()."
+  )
+})
+
+test_that("viewSegmentation errors for invalid method names", {
+  fake_img <- structure(list(), class = "ijtiff_img")
+
+  expect_error(
+    viewSegmentation(fake_img, methods = "InvalidMethod"),
+    "Invalid segmentation method. Choose from: Huang, Mean, Otsu, Triangle"
+  )
+})
+
+# Test that plots are outputted
+test_that("viewSegmentation draws plots", {
+  img <- array(1:9, c(3, 3))
+  class(img) <- "ijtiff_img"
+
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
 
   methods <- c("Otsu", "Triangle")
+  viewSegmentation(img, methods)
 
-  calls <- 0L
-
-  testthat::with_mocked_bindings({
-    result <- viewSegmentation(image = img, methods = methods)
-    testthat::expect_null(result)
-  },
-  viewSegmentation = function(image, methods) {
-    for (m in methods) {
-      ijtiff::display(autothresholdr::apply_mask(image, m),
-                      main = paste("Segmentation using", m))
-      calls <<- calls + 1L
-    }
-    return()
-  })
-
-  testthat::expect_identical(calls, length(methods))
+  p <- recordPlot()
+  expect_equal(length(p), length(methods) + 1) # +1 for original image
 })
 
 # [END]

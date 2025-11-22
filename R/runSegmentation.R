@@ -23,11 +23,15 @@
 #' @examples
 #' # Example 1:
 #' # Segmentation of a tomogram with Otsu and Triangle algorithms without ground truth
+#'
+#' data("TS_001.133", package = "cryoCompare")
 #' image <- TS_001.133
 #' cryoCompare::runSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
 #' # Example 2:
 #' # Segmentation of a tomogram with all available methods with ground truth
+#' data("TS_001.133", package = "cryoCompare")
+#' data("TS_001.133_ground_truth", package = "cryoCompare")
 #' image <- TS_001.133
 #' ground_truth <- TS_001.133_ground_truth
 #' cryoCompare::runSegmentation(image,
@@ -94,7 +98,7 @@ runSegmentation <- function(image,
   viewSegmentation(image, methods)
   message(sprintf("Visualisation completed.\n"))
 
-  result <- NULL
+  result <- "Segmentation completed. No ground truth provided for comparison."
 
   # Only run ground truth comparison when provided
   if (!is.null(ground_truth)) {
@@ -102,7 +106,6 @@ runSegmentation <- function(image,
     gt_comparison <- .compareGroundTruth(seg_result, ground_truth)
     print(gt_comparison$p)
     message(sprintf("Comparison completed.\n"))
-
     result <- gt_comparison$dice_score
   }
 
@@ -129,6 +132,7 @@ runSegmentation <- function(image,
 #' @examples
 #' # Example 1:
 #' # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
+#' data("TS_001.133", package = "cryoCompare")
 #' image <- TS_001.133
 #' seg_result <- cryoCompare::thresholdSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
@@ -192,6 +196,7 @@ thresholdSegmentation <- function(image, methods) {
 #' @examples
 #' #' # Example 1:
 #' # Visualising segmentation results using Otsu and Triangle methods
+#' data("TS_001.133", package = "cryoCompare")
 #' image <- TS_001.133
 #' cryoCompare::viewSegmentation(image, methods = c("Otsu", "Triangle"))
 #'
@@ -224,8 +229,8 @@ viewSegmentation <- function(image, methods) {
 
   # Display segmentation masks on the image for each method
   for (m in methods) {
-    ijtiff::display(autothresholdr::apply_mask(image, m),
-                    main = paste("Segmentation using", m))
+    ijtiff::display(autothresholdr::apply_mask(image, m))
+    title(paste("Segmentation using", m))
   }
 
   return(invisible(NULL))

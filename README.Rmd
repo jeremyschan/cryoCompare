@@ -61,11 +61,12 @@ The package contains some sample data from the CZ Biohub. Refer to the package v
 ![](./inst/extdata/readme_img.png)
 
 ## Contributions
-The author of this package is Jeremy Chan. The example data is derived from the Cryo-ET Data Portal by CZ Biohub submitted by Ke et al. (2018). The denoising algorithms are implemented using the `EBImage` package. The segmentation algorithms are implemented using the `ijtiff` and `autothresholdr` packages. Visualisation is done using base R plotting functions and `ggplot2`. Generative AI was used for proofreading, code optimisation, and assistance in writing documentation.
+The author of this package is Jeremy Chan. This project depends on and builds upon several open‑source R packages whose functions and algorithms are used throughout the implementation and analysis logic, particularly EBImage (image processing), ijtiff (TIFF I/O), autothresholdr (automatic thresholding), ggplot2 and base R (visualisation), and other CRAN/Bioconductor packages used for data manipulation and computation (e.g., dplyr). Credit for those functions, algorithms, and helper utilities belongs to their respective package authors; their contributions made the implementation, performance comparisons, and many analysis choices possible. The example data is derived from the Cryo‑ET Data Portal by CZ Biohub (Ke et al., 2018). Generative AI was used only for proofreading, minor code optimisation suggestions, and documentation assistance.
 
+All higher‑level design decisions, original analysis logic, algorithms, and the organisation of code in this repository are of the author's ideas. I wrote the core functions (runPipeline, runDenoising, runSegmentation, thresholdSegmentation, viewSegmentation, .compareGroundTruth), designed the end‑to‑end pipeline to standardise comparisons across denoising and segmentation methods, implemented input/output and preprocessing for tomograms and paired ground‑truth data, and created examples and vignettes to demonstrate use. I also added unit tests, example data, documentation (roxygen/manual pages and README), and package metadata (DESCRIPTION/NAMESPACE) to make the project easy to install and reproduce.
 
 ## References
-``` r
+```
 Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
 
 Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040

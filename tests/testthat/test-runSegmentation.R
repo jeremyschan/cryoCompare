@@ -1,42 +1,83 @@
-test_that("runSegmentation validates methods and runs thresholding", {
+# Test user input validation for runSegmentation
+test_that("runSegmentation errors for non ijtiff_img input", {
+  fake_img <- matrix(1:4, nrow = 2)
 
-  # Create a mock image
-  img_mat <- matrix(as.integer(1:100), nrow = 10, ncol = 10)
-  img_arr <- array(img_mat, dim = c(10, 10, 1, 1))
-  td <- tempdir(check = TRUE)
-  src <- file.path(td, "test_image.tif")
-  ijtiff::write_tif(img_arr, src, bits_per_sample = 8, overwrite = TRUE)
-  img <- ijtiff::read_tif(src)
-
-  methods <- c("Otsu", "Triangle")
-
-  got_thresholds <- NULL
-
-  testthat::with_mocked_bindings({
-    result <- runSegmentation(image = img, methods = methods)
-    testthat::expect_null(result)
-  },
-  viewSegmentation = function(image, methods) {invisible(NULL)},
-  thresholdSegmentation = function(image, methods) {
-    thresholds <- stats::setNames(numeric(length(methods)), methods)
-    masks <- vector("list", length(methods))
-    names(masks) <- methods
-
-    for (m in methods) {
-      message(sprintf("Running segmentation method: %s...\n", m))
-      thr <- autothresholdr::auto_thresh(int_arr = image, method = m)
-      thresholds[m] <- thr
-      masks[[m]] <- image >= thr
-    }
-
-    got_thresholds <<- thresholds
-    return(list(thresholds = thresholds, masks = masks))
-    },
-  .compareGroundTruth = function(seg_result, ground_truth) {invisible(NULL)}
+  expect_error(
+    runSegmentation(fake_img, methods = "Otsu"),
+    "Input image must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif()."
   )
+})
 
-  testthat::expect_true(is.numeric(got_thresholds))
-  testthat::expect_equal(names(got_thresholds), methods)
+test_that("runSegmentation errors for invalid methods", {
+  img <- array(1:9, c(3, 3))
+  class(img) <- "ijtiff_img"
+
+  expect_error(
+    runSegmentation(img, methods = "InvalidMethod"),
+    "Invalid segmentation method. Choose from: Huang, Mean, Otsu, Triangle"
+  )
+})
+
+test_that("runSegmentation errors for invalid ground truth type", {
+  img <- array(1:9, c(3, 3))
+  class(img) <- "ijtiff_img"
+
+  bad_gt <- matrix(1:9, nrow = 3)
+
+  expect_error(
+    runSegmentation(img, methods = "Otsu", ground_truth = bad_gt),
+    "Ground truth mask must be of class 'ijtiff_img'.
+         Please read the .tif file using ijtiff::read_tif()."
+  )
+})
+
+# Integration tests
+test_that("runSegmentation runs end to end without ground truth", {
+  img <- array(1:9, c(3, 3))
+  class(img) <- "ijtiff_img"
+
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  result <- suppressMessages(
+    runSegmentation(
+    image = img,
+    methods = c("Otsu", "Triangle")
+  ))
+
+  # should return the string when no ground truth is provided
+  expect_type(result, "character")
+  expect_match(result, "Segmentation completed")
+
+  # confirm something was plotted
+  p <- recordPlot()
+  expect_gt(length(p), 0)
+})
+
+test_that("runSegmentation runs end to end with ground truth", {
+  img <- array(c(1, 2, 3, 4), dim = c(2, 2))
+  class(img) <- "ijtiff_img"
+
+  gt <- array(c(TRUE, FALSE, TRUE, FALSE), dim = c(2, 2))
+  class(gt) <- "ijtiff_img"
+
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  result <- suppressMessages(
+    runSegmentation(
+    image = img,
+    methods = c("Otsu", "Mean"),
+    ground_truth = gt
+  ))
+
+  # result should be a data frame containing dice scores for each method
+  expect_true(is.data.frame(result))
+
+  # plot should exist after running viewSegmentation + printed gt plot
+  p <- recordPlot()
+  expect_gt(length(p), 0)
 })
 
 # [END]

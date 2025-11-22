@@ -27,6 +27,7 @@ for further analysis.
 \examples{
 # Example 1:
 # Extracting the segmentation masks and thresholds using Otsu and Triangle methods
+data("TS_001.133", package = "cryoCompare")
 image <- TS_001.133
 seg_result <- cryoCompare::thresholdSegmentation(image, methods = c("Otsu", "Triangle"))
 
