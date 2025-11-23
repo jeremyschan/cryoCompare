@@ -35,7 +35,7 @@ ls("package:cryoCompare")
 The package contains some sample data from the CZ Biohub, accessible from the links in the citation in the README file. To load the sample data, see the applications section below.
 
 ## Applications
-To get more information about a specific function, the help documentation will be helpful:
+To get more information about a specific function, the help documentation will be useful:
 ```
 library(cryoCompare)
 ?cryoCompare::runPipeline
@@ -76,4 +76,61 @@ We can also choose to use the functions within the pipeline individually. For ex
 ```
 runDenoising(image = TS_001.133)
 ```
-For more details on how to run each function, refer to the documentation for each function.
+
+Similarly, we can run just the segmentation step using the `runSegmentation` function, making sure to provide the methods to be used:
+```
+runSegmentation(image = TS_001.133,
+                        methods = c("Huang", "Mean"))
+```
+
+We can also visualise the segmentation results using the `viewSegmentation` function, which will display the segmented images for the specified methods:
+```
+viewSegmentation(image = TS_001.133,
+                         methods = c("Huang", "Mean"))
+```
+
+Lastly, we can perform threshold-based segmentation using the `thresholdSegmentation` function, returning a threshold value and a binary mask:
+```
+threshold_result <- thresholdSegmentation(image = TS_001.133,
+                                         method = "Otsu")
+print(threshold_result$threshold)
+ijtiff::display(threshold_result$mask)
+```
+
+## Package References
+
+- Chan, J. (2025). cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms. Unpublished. https://github.com/jeremyschan/cryoCompare
+
+## Other references
+
+- Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+
+- Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
+
+- Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010). EBImage - an R package for image processing with applications to cellular phenotypes. Bioinformatics, 26(7), 979-981. https://doi.org/10.1093/bioinformatics/btq046
+
+- Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the measures of fuzziness. Pattern Recognition, 28(1), 41-51. https://doi.org/10.1016/0031-3203(94)E0043-K.
+
+- Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
+
+- Ke, Z., Oton, J., Qu, K., Cortese, M., Zila, V., McKeane, L., Nakane, T., Zivanov, J., Neufeldt, C. J., Cerikan, B., Lu, J. M., Peukes, J., Xiong, X., Kräusslich, H., Scheres, S. H. W., Bartenschlager, R., & Briggs, J. A. G. (2020). Structured and distributions of SARS-CoV-2 spike proteins on intact virions. Nature, 588, 498-502. https://doi.org/10.1038/s41586-020-2665-2
+
+- Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic thresholding from the gradients of region boundaries. Journal of Microscopy, 265(2), 185-195. https://doi.org/10.1111/jmi.12474
+
+- Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings of the Royal Society B: Biological Sciences, 207(1167): 187-217. https://doi.org/10.1098/rspb.1980.0020
+
+- Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633. https://doi.org/10.21105/joss.00633
+
+- Otsu, N. (1979). A threshold selection method from gray-level histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66. https://doi.org/10.1109/TSMC.1979.4310076
+
+- Weickert, J. (1998). Anisotropic diffusion in image processing. Stuttgart: Teubner.
+
+- Wickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag New York. https://ggplot2.tidyverse.org
+
+- Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. https://CRAN.R-project.org/package=dplyr
+
+- Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry, 25(7), 741-753. https://doi.org/10.1177/25.7.70454
+
+``` {r}
+sessionInfo()
+```
