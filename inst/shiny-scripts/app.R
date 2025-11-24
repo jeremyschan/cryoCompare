@@ -1,5 +1,6 @@
 library(shiny)
 library(ijtiff)
+library(autothresholdr)
 
 # Define UI
 ui <- fluidPage(
@@ -53,7 +54,7 @@ ui <- fluidPage(
 
         tabPanel("Segmentation results", uiOutput("segmentation_results")),
 
-        tabPanel("Accuracy metrics", tableOutput("accuracy_metrics"))
+        tabPanel("Accuracy metrics", tableOutput("accuracy_metrics"), plotOutput("accuray_plot"))
       )
     )
   )
@@ -90,24 +91,34 @@ server <- function(input, output) {
     # Select image for segmentation (for simplicity, using Gaussian denoised image)
     selected_image <- denoised_results$gaussian
 
-    # Run segmentation
+    # Load ground truth if provided
     if (is.null(input$ground_truth)) {
       ground_truth_mask <- NULL
     } else {
       ground_truth_mask <- ijtiff::read_tif(input$ground_truth$datapath)
     }
 
-    segresults <- cryoCompare::runSegmentation(image = selected_image,
-                                                         methods = input$seg_methods,
-                                                         ground_truth = ground_truth_mask)
+    # Run segmentation pipeline
+    seg_results <- cryoCompare::runSegmentation(
+      image = selected_image,
+      methods = input$seg_methods,
+      ground_truth = ground_truth_mask
+    )
 
-    # Display segmentation results
+    # Extract masks for visualization
+    segmentation_masks <- seg_results$segmentation$masks
+
+    # Output segmentation visualisations
     output$segmentation_results <- renderUI({
-      lapply(names(seg_results), function(method) {
+      lapply(names(segmentation_masks), function(method) {
+
         seg_path <- tempfile(fileext = ".png")
+
         png(seg_path)
-        ijtiff::display(seg_results[[method]])
+        ijtiff::display(segmentation_masks[[method]])
+        title(method)
         dev.off()
+
         tags$div(
           tags$h4(method),
           tags$img(src = seg_path, width = "100%")
@@ -115,17 +126,30 @@ server <- function(input, output) {
       })
     })
 
-    # Calculate accuracy metrics if ground truth is provided
+    # Handle accuracy metrics
     if (!is.null(ground_truth_mask)) {
-      accuracy_df <- seg_results
+      gt <- seg_results $ground_truth
 
       output$accuracyMetrics <- renderTable({
-        accuracy_df
+        gt$dice_score
       })
+
+      output$accuracy_plot <- renderPlot({
+        gt$p
+      })
+
     } else {
       output$accuracyMetrics <- renderTable({
-        data.frame(Message = "No ground truth provided; accuracy metrics not calculated.")
+        data.frame(
+          Message = "No ground truth provided. Accuracy metrics not calculated."
+        )
       })
+
+      output$accuracy_plot <- renderPlot({
+        plot.new()
+        text(0.5, 0.5, labels = "No ground truth provided.")
+      })
+
     }
   })
 }

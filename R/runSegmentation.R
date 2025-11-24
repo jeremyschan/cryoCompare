@@ -16,9 +16,8 @@
 #' from "Huang", "Mean", "Otsu", and "Triangle"
 #' @param ground_truth optional ground truth mask of tomogram file
 #'
-#' @return Returns a data frame containing the DICE similarity coefficient for
-#' each segmentation method compared to the ground truth, if provided. Otherwise,
-#' returns NULL.
+#' @return Returns a list containing: the segmentation results from each method,
+#' and the ground truth comparison results (if provided).
 #'
 #' @examples
 #' # Example 1:
@@ -99,7 +98,10 @@ runSegmentation <- function(image,
     result <- gt_comparison$dice_score
   }
 
-  return(result)
+  return(list(
+    segmentation = seg_result,
+    ground_truth = gt_comparison
+  ))
 }
 
 

@@ -15,9 +15,9 @@
 #' @examples
 #' # No examples: this function requires user input
 #'
-#' @returns Returns a data frame containing the DICE similarity coefficient for
-#' each segmentation method compared to the ground truth, if provided. Otherwise,
-#' returns NULL.
+#' @returns Returns a list containing: the segmentation results from each method,
+#' and the ground truth comparison results (if provided).
+#'
 #' @export
 
 runPipeline <- function(image,

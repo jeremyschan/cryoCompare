@@ -15,9 +15,8 @@ from "Huang", "Mean", "Otsu", and "Triangle"}
 \item{ground_truth}{optional ground truth mask of tomogram file}
 }
 \value{
-Returns a data frame containing the DICE similarity coefficient for
-each segmentation method compared to the ground truth, if provided. Otherwise,
-returns NULL.
+Returns a list containing: the segmentation results from each method,
+and the ground truth comparison results (if provided).
 }
 \description{
 This function will run segmentation algorithms on the specified tomograms
