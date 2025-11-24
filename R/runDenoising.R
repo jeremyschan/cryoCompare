@@ -16,7 +16,7 @@
 #' @param median_size optional window size of the median filter, default set
 #' to 5
 #'
-#' @return Returns null, instead saves the denoised images.
+#' @return A list containing the original image and the denoised images.
 #'
 #' @examples
 #' # Example 1:
@@ -117,7 +117,7 @@ runDenoising <- function(image, output_dir = NULL,
                     bits_per_sample = 8, overwrite = TRUE)
 
   message(sprintf("Denoising completed.\n"))
-  return(invisible(NULL))
+  return(results)
 }
 
 # [END]

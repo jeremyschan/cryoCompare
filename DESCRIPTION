@@ -26,7 +26,8 @@ Imports:
     dplyr,
     EBImage,
     ggplot2,
-    ijtiff
+    ijtiff,
+    shiny
 Suggests: 
     knitr,
     rmarkdown,

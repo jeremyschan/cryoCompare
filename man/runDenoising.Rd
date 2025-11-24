@@ -19,7 +19,7 @@ set to 1}
 to 5}
 }
 \value{
-Returns null, instead saves the denoised images.
+A list containing the original image and the denoised images.
 }
 \description{
 This function performs image denoising on tomograms (in .tif format) using

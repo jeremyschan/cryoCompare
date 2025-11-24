@@ -80,16 +80,6 @@ runSegmentation <- function(image,
   }
 
   # Begin segmentation pipeline
-  message(sprintf("Reading image...\n"))
-
-  available_methods <- c("Huang", "Mean", "Otsu", "Triangle")
-  for (method in methods) {
-    if (!(method %in% available_methods)) {
-      stop("Invalid segmentation method. Choose from: ",
-           paste(available_methods, collapse = ", "))
-    }
-  }
-
   message(sprintf("Running segmentation algorithms...\n"))
   seg_result <- thresholdSegmentation(image, methods)
   message(sprintf("Segmentation completed.\n"))
