@@ -82,12 +82,14 @@ runDenoising <- function(image, output_dir = NULL,
   ijtiff::display(median_denoise)
   title(paste("Median denoising, size = ", median_size))
 
+  # Store denoised images in a list for return
   results <- list(
     original = image,
     gaussian = gaussian_denoise,
     median = median_denoise
   )
 
+  # Set default output directory if not provided
   if(is.null(output_dir)) {
      output_dir <- file.path("inst/extdata")
   }

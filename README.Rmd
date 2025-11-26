@@ -37,6 +37,11 @@ devtools::install_github("jeremyschan/cryoCompare", build_vignettes = TRUE)
 library("cryoCompare")
 ```
 
+To run the Shiny application:
+``` r
+runcryoCompare()
+```
+
 ## Overview
 ``` r
 ls("package:cryoCompare")
@@ -61,15 +66,18 @@ The package contains some sample data from the CZ Biohub. Refer to the package v
 ![](./inst/extdata/readme_img.png)
 
 ## Contributions
-The author of this package is Jeremy Chan. This project depends on and builds upon several open‑source R packages whose functions and algorithms are used throughout the implementation and analysis logic, particularly EBImage (image processing), ijtiff (TIFF I/O), autothresholdr (automatic thresholding), ggplot2 and base R (visualisation), and other CRAN/Bioconductor packages used for data manipulation and computation (e.g., dplyr). Credit for those functions, algorithms, and helper utilities belongs to their respective package authors; their contributions made the implementation, performance comparisons, and many analysis choices possible. The example data is derived from the Cryo‑ET Data Portal by CZ Biohub (Ke et al., 2018). Generative AI was used only for proofreading, minor code optimisation suggestions, and documentation assistance.
+The author of this package is Jeremy Chan. This project depends on and builds upon several open‑source R packages whose functions and algorithms are used throughout the implementation and analysis logic, particularly EBImage (image processing), ijtiff (TIFF I/O), autothresholdr (automatic thresholding), ggplot2 and base R (visualisation), and other CRAN/Bioconductor packages used for data manipulation and computation (e.g., dplyr). Credit for those functions, algorithms, and helper utilities belongs to their respective package authors; their contributions made the implementation, performance comparisons, and many analysis choices possible. The example data is derived from the Cryo‑ET Data Portal by CZ Biohub (Ke et al., 2018). Generative AI was used only for proofreading, code optimisation suggestions, and documentation assistance.
 
-All higher‑level design decisions, original analysis logic, algorithms, and the organisation of code in this repository are of the author's ideas. I wrote the core functions (runPipeline, runDenoising, runSegmentation, thresholdSegmentation, viewSegmentation, .compareGroundTruth), designed the end‑to‑end pipeline to standardise comparisons across denoising and segmentation methods, implemented input/output and preprocessing for tomograms and paired ground‑truth data, and created examples and vignettes to demonstrate use. I also added unit tests, example data, documentation (roxygen/manual pages and README), and package metadata (DESCRIPTION/NAMESPACE) to make the project easy to install and reproduce.
+All higher‑level design decisions, original analysis logic, algorithms, and the organisation of code in this repository are of the author's ideas. I wrote the core functions (runPipeline, runDenoising, runSegmentation, thresholdSegmentation, viewSegmentation, .compareGroundTruth), designed the end‑to‑end pipeline to standardise comparisons across denoising and segmentation methods, implemented input/output and preprocessing for tomograms and paired ground‑truth data, and created examples and vignettes to demonstrate use. I also added unit tests, example data, documentation, and package metadata to make the project easy to install and reproduce.
 
 ## References
 ```
-Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie, Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny: Web Application Framework for R. https://CRAN.R-project.org/package=shiny
+conditionalPanel demo. (n.d.) Shiny. https://shiny.posit.co/r/gallery/dynamic-user-interface/conditionalpanel-demo/
 
 Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+
+File Upload. (n.d.) Shiny. https://shiny.posit.co/r/gallery/widgets/file-upload/
+Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie, Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny: Web Application Framework for R. https://CRAN.R-project.org/package=shiny
 
 Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
 
@@ -88,6 +96,8 @@ Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings of the Ro
 Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633. https://doi.org/10.21105/joss.00633
 
 Otsu, N. (1979). A threshold selection method from gray-level histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66. https://doi.org/10.1109/TSMC.1979.4310076
+
+Tabsets. (n.d.) Shiny. https://shiny.posit.co/r/gallery/application-layout/tabsets/
 
 Weickert, J. (1998). Anisotropic diffusion in image processing. Stuttgart: Teubner.
 
@@ -118,16 +128,26 @@ The package tree structure is provided below:
   |- inst
      |- extdata
         |- readme_img.png
+        |- TS_001.133.tif
+        |- TS_001.133_ground_truth.tif
+     |- shiny-scripts
+        |- app.R
   |- man
+     |- dot-compareGroundTruth.Rd
+     |- runcryoCompare.Rd
      |- runDenoising.Rd
      |- runSegmentation.Rd
      |- viewSegmentation.Rd
      |- thresholdSegmentation.Rd
      |- runPipeline.Rd
+     |- TS_001.133.Rd
+     |- TS_001.133_ground_truth.Rd
   |- R
+    |- data.R
     |- runDenoising.R
     |- runPipeline.R
     |- runSegmentation.R
+    |- runcryoCompare.R
   |- vignettes
     |- Introduction_cryoCompare.Rmd
   |- tests

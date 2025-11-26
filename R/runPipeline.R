@@ -49,7 +49,6 @@ runPipeline <- function(image,
          Please read the .tif file using ijtiff::read_tif().")
   }
 
-  # Begin pipeline
   suppressWarnings({
     gaussian_choice <- read("Enter a value for Gaussian sigma: ")
     gaussian_choice <- as.numeric(gaussian_choice)
@@ -66,8 +65,10 @@ runPipeline <- function(image,
     }
   })
 
+  # Begin pipeline
   runDenoising(image, output_dir, gaussian_choice, median_choice)
 
+  # Allow users to choose which denoised image to segment
   message(sprintf("Choose an image for segmentation.\n"))
   valid <- c("original", "gaussian", "median")
   seg_choice <- read("Enter 'original', 'gaussian', or 'median': ")
@@ -75,6 +76,7 @@ runPipeline <- function(image,
     seg_choice <- read("Invalid choice. Please enter 'original', 'gaussian', or 'median': ")
   }
 
+  # Determine image path based on output directory, then read the image in
   if (is.null(output_dir)) {
     base_dir <- "inst/extdata"
   } else {
@@ -93,6 +95,7 @@ runPipeline <- function(image,
     chosen_image <- image
   }
 
+  # Run segmentation on chosen image, with or without ground truth
   if (!is.null(ground_truth)) {
     results <- runSegmentation(chosen_image, methods, ground_truth)
   } else {

@@ -78,15 +78,17 @@ runSegmentation <- function(image,
          Please read the .tif file using ijtiff::read_tif().")
   }
 
-  # Begin segmentation pipeline
+  # Run segmentation with the specified methods
   message(sprintf("Running segmentation algorithms...\n"))
   seg_result <- thresholdSegmentation(image, methods)
   message(sprintf("Segmentation completed.\n"))
 
+  # Visualise segmentation results
   message(sprintf("Visualising segmentation results...\n"))
   viewSegmentation(image, methods)
   message(sprintf("Visualisation completed.\n"))
 
+  # Initialise ground truth comparison result
   gt_comparison <- NULL
 
   # Only run ground truth comparison when provided
