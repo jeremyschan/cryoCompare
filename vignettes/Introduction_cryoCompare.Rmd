@@ -83,13 +83,21 @@ runSegmentation(image = TS_001.133,
                         methods = c("Huang", "Mean"))
 ```
 
-We can also visualise the segmentation results using the `viewSegmentation` function, which will display the segmented images for the specified methods:
+We can also call `runSegmmentation` with a ground truth mask to evaluate segmentation accuracy:
+```
+runSegmentation(image = TS_001.133,
+                        methods = c("Otsu", "Triangle"),
+                        ground_truth = TS_001.133_ground_truth)
+```
+This will output the segmentation results, along with the Dice Coefficient accuracy metric for each method visualised using a plot.
+
+We can also separately visualise the segmentation results using the `viewSegmentation` function, which will display the segmented images for the specified methods:
 ```
 viewSegmentation(image = TS_001.133,
                          methods = c("Huang", "Mean"))
 ```
 
-Lastly, we can perform threshold-based segmentation using the `thresholdSegmentation` function, returning a threshold value and a binary mask:
+Lastly, we can perform threshold-based segmentation using the `thresholdSegmentation` function, returning a threshold value and a binary mask for each method:
 ```
 threshold_result <- thresholdSegmentation(image = TS_001.133,
                                          method = "Otsu")
@@ -105,7 +113,11 @@ ijtiff::display(threshold_result$mask)
 
 - Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie, Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny: Web Application Framework for R. https://CRAN.R-project.org/package=shiny
 
+- conditionalPanel demo. (n.d.) Shiny. https://shiny.posit.co/r/gallery/dynamic-user-interface/conditionalpanel-demo/
+
 - Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+
+- File Upload. (n.d.) Shiny. https://shiny.posit.co/r/gallery/widgets/file-upload/
 
 - Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
 
@@ -124,6 +136,8 @@ ijtiff::display(threshold_result$mask)
 - Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633. https://doi.org/10.21105/joss.00633
 
 - Otsu, N. (1979). A threshold selection method from gray-level histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66. https://doi.org/10.1109/TSMC.1979.4310076
+
+- Tabsets. (n.d.) Shiny. https://shiny.posit.co/r/gallery/application-layout/tabsets/
 
 - Weickert, J. (1998). Anisotropic diffusion in image processing. Stuttgart: Teubner.
 
