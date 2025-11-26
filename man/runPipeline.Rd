@@ -17,9 +17,8 @@ images will be saved in the data folder of the package}
 \item{ground_truth}{optional ground truth mask of tomogram file}
 }
 \value{
-Returns a data frame containing the DICE similarity coefficient for
-each segmentation method compared to the ground truth, if provided. Otherwise,
-returns NULL.
+Returns a list containing: the segmentation results from each method,
+and the ground truth comparison results (if provided).
 }
 \description{
 This function first applies several denoising filters to a tomogram in .tif

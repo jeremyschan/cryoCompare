@@ -87,7 +87,7 @@ runSegmentation <- function(image,
   viewSegmentation(image, methods)
   message(sprintf("Visualisation completed.\n"))
 
-  result <- "Segmentation completed. No ground truth provided for comparison."
+  gt_comparison <- NULL
 
   # Only run ground truth comparison when provided
   if (!is.null(ground_truth)) {

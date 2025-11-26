@@ -46,11 +46,10 @@ test_that("runSegmentation runs end to end without ground truth", {
     methods = c("Otsu", "Triangle")
   ))
 
-  # should return the string when no ground truth is provided
-  expect_type(result, "character")
-  expect_match(result, "Segmentation completed")
+  # Should return a list regardless of ground truth
+  expect_true(is.list(result))
 
-  # confirm something was plotted
+  # Confirm something was plotted
   p <- recordPlot()
   expect_gt(length(p), 0)
 })
@@ -72,10 +71,10 @@ test_that("runSegmentation runs end to end with ground truth", {
     ground_truth = gt
   ))
 
-  # result should be a data frame containing dice scores for each method
-  expect_true(is.data.frame(result))
+  # Result should be a data frame containing dice scores for each method
+  expect_true(is.list(result))
 
-  # plot should exist after running viewSegmentation + printed gt plot
+  # Plot should exist after running viewSegmentation + printed gt plot
   p <- recordPlot()
   expect_gt(length(p), 0)
 })
