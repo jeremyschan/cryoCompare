@@ -1,7 +1,7 @@
 citHeader("To cite cryoCompare in publications use:")
 
 citEntry(entry = "Unpublished",
-  title        = "cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms",
+  title        = "cryoCompare",
   author       = "Jeremy Chan",
   note         = "Full version with Shiny application",
   year         = "2025",
@@ -9,6 +9,6 @@ citEntry(entry = "Unpublished",
 
 
   textVersion  =
-  paste("Chan, J. (2025). cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms.
+  paste("Chan, J. (2025). cryoCompare.
         Unpublished. URL https://github.com/jeremyschan/cryoCompare.")
 )

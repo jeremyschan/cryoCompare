@@ -50,18 +50,18 @@ data("TS_001.133")
 
 Note that the tomogram data should be loaded in as a *ijtiff_img* object. This can be done by running the following command:
 ```
-library(ijtiff)
+library("ijtiff")
 sample_tomogram <- ijtiff::read_tif(your_path_to_tif_file)
 ```
 
-Next, we will run the `runPipeline` function on the sample tomogram using Huang and Mean segmentation methods:
+Next, we will run the `runPipeline` function on the sample tomogram using Huang and Mean segmentation methods (remember to put them into a vector!):
 ```
 runPipeline(image = TS_001.133, 
                       methods = c("Huang", "Mean"))
 ```
 Note that there are four segmentation methods available: "Otsu", "Triangle", "Huang", and "Mean".
 
-The command will show the denoised images for each methods, then prompt you to select which one you would like to input into the segmentation step. After selecting the denoising method, the function will display the segmentation results for each segmentation method. These results include visualisations of the segmented tomograms and an accuracy metric through the Dice Coefficient.
+The command will show the denoised images for each methods, then prompt you to select which one you would like to input into the segmentation step. After selecting the denoising method, the function will display the segmentation results for each segmentation method. This will return a list containing the segmentation results (masks and threshold values).
 
 We can also run the pipeline with a ground truth mask to compare the segmentation accuracy, this time with the Otsu and Triangle segmentation methods:
 ```
@@ -70,32 +70,35 @@ runPipeline(image = TS_001.133,
                       methods = c("Otsu", "Triangle"),
                       ground_truth = TS_001.133_ground_truth)
 ```
-This will allow us to see how well each segmentation method performed against the ground truth data.
+This will allow us to see how well each segmentation method performed against the ground truth data. This will return a list containing the segmentation results as well as the Dice Coefficient accuracy metrics for each method, through a table with exact values and also visualised via a plot.
 
-We can also choose to use the functions within the pipeline individually. For example, we can run just the denoising step using the `runDenoising` function:
+If you only want to run one of the functions within the pipeline, you can choose which one to use. For example, we can run just the denoising step using the `runDenoising` function:
 ```
 runDenoising(image = TS_001.133)
 ```
+This will prompt you to enter values for the Gaussian sigma and Median filter size, then display the denoised images for each method. The function will return a list containing the denoised images for each method as well as save them to the data folder of the package by default.
 
 Similarly, we can run just the segmentation step using the `runSegmentation` function, making sure to provide the methods to be used:
 ```
 runSegmentation(image = TS_001.133,
                         methods = c("Huang", "Mean"))
 ```
+These return values are the same as `runPipeline`, and will display the segmentation results for each method and return a list containing the segmentation masks and threshold values for each method.
 
-We can also call `runSegmmentation` with a ground truth mask to evaluate segmentation accuracy:
+We can also call `runSegmentation` with a ground truth mask to evaluate segmentation accuracy:
 ```
 runSegmentation(image = TS_001.133,
                         methods = c("Otsu", "Triangle"),
                         ground_truth = TS_001.133_ground_truth)
 ```
-This will output the segmentation results, along with the Dice Coefficient accuracy metric for each method visualised using a plot.
+As mentioned, this will output the segmentation results, along with the Dice Coefficient accuracy metric for each method visualised using a plot.
 
 We can also separately visualise the segmentation results using the `viewSegmentation` function, which will display the segmented images for the specified methods:
 ```
 viewSegmentation(image = TS_001.133,
                          methods = c("Huang", "Mean"))
 ```
+This will display the segmented images for each method specified.
 
 Lastly, we can perform threshold-based segmentation using the `thresholdSegmentation` function, returning a threshold value and a binary mask for each method:
 ```
@@ -104,10 +107,11 @@ threshold_result <- thresholdSegmentation(image = TS_001.133,
 print(threshold_result$threshold)
 ijtiff::display(threshold_result$mask)
 ```
+This will return the threshold value used for segmentation as well as display the binary mask generated using the specified method.
 
 ## Package References
 
-- Chan, J. (2025). cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms. Unpublished. https://github.com/jeremyschan/cryoCompare
+- Chan, J. (2025). cryoCompare. Unpublished. https://github.com/jeremyschan/cryoCompare
 
 ## Other references
 
