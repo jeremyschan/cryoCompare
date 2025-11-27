@@ -1,6 +1,6 @@
 Package: cryoCompare
 Type: Package
-Title: cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms
+Title: cryoCompare
 Version: 0.1.0
 Authors@R: c(
     person(

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms
+# cryoCompare
 
 <!-- badges: start -->
 
@@ -44,26 +44,47 @@ runcryoCompare()
 
 ## Overview
 
+`cryoCompare` contains 5 functions:
+
+1.  ***runPipeline*** will run all of the following functions on the
+    user-provided tomogram read in .tif format, allowing users to choose
+    the segmentation algorithms to apply. It will then denoise, segment,
+    outputting the masks from the segmentation methods. If ground-truth
+    data is provided, it will also output a summary table and plot of
+    Dice coefficients for each method.
+
+2.  ***runDenoising*** will apply denoising algorithms to the
+    user-provided tomogram read in .tif format, with parameters
+    customisable by the user. This function will return a list of
+    denoised images using Gaussian and Median diffusion filters. It will
+    also save the denoised images as .tif files in the user-provided
+    directory, or in “inst/extdata” otherwise.
+
+3.  ***runSegmentation*** will apply the user-selected segmentation
+    algorithms to the user-provided tomogram read in .tif format. Users
+    can also choose to include ground-truth data to compare segmentation
+    accuracy using the Dice coefficient. This function will output masks
+    from each segmentation method, as well as a summary table and plot
+    of Dice coefficients if ground-truth data is provided (same as
+    runPipeline).
+
+4.  ***thresholdSegmentation*** will apply the user-selected
+    segmentation algorithms to the user-provided tomogram read in .tif
+    format. This function will output masks that can be visualised, and
+    threshold values used for each method.
+
+5.  ***viewSegmentation*** will visualise the segmented masks for each
+    user-selected segmentation method on the user-provided tomogram read
+    in .tif format. This function displays a ggplot object of the masks
+    for each method.
+
+For examples on how to use each function, refer to the package vignette.
+
 ``` r
 ls("package:cryoCompare")
 data(package = "cryoCompare")
 browseVignettes("cryoCompare")
 ```
-
-`cryoCompare` contains 5 functions:
-
-1.  ***runPipeline*** for running the complete denoising and
-    segmentation pipeline
-
-2.  ***runDenoising*** for applying denoising algorithms to tomograms
-
-3.  ***runSegmentation*** for applying segmentation algorithms to
-    tomograms
-
-4.  ***thresholdSegmentation*** for threshold-based segmentation of
-    tomograms
-
-5.  ***viewSegmentation*** for visualising segmentation results
 
 The package contains some sample data from the CZ Biohub. Refer to the
 package vignettes for more details. An overview of the package is
@@ -73,68 +94,95 @@ illustrated below.
 
 ## Contributions
 
-The author of this package is Jeremy Chan. This project depends on and
-builds upon several open‑source R packages whose functions and
-algorithms are used throughout the implementation and analysis logic,
-particularly EBImage (image processing), ijtiff (TIFF I/O),
-autothresholdr (automatic thresholding), ggplot2 and base R
-(visualisation), and other CRAN/Bioconductor packages used for data
-manipulation and computation (e.g., dplyr). Credit for those functions,
-algorithms, and helper utilities belongs to their respective package
-authors; their contributions made the implementation, performance
-comparisons, and many analysis choices possible. The example data is
-derived from the Cryo‑ET Data Portal by CZ Biohub (Ke et al., 2018).
-Generative AI was used only for proofreading, code optimisation
-suggestions, and documentation assistance.
-
-All higher‑level design decisions, original analysis logic, algorithms,
-and the organisation of code in this repository are of the author’s
-ideas. I wrote the core functions (runPipeline, runDenoising,
-runSegmentation, thresholdSegmentation, viewSegmentation,
-.compareGroundTruth), designed the end‑to‑end pipeline to standardise
-comparisons across denoising and segmentation methods, implemented
-input/output and preprocessing for tomograms and paired ground‑truth
-data, and created examples and vignettes to demonstrate use. I also
-added unit tests, example data, documentation, and package metadata to
-make the project easy to install and reproduce.
+The author of this package is Jeremy Chan. The `runDenoising` function
+utilises the denoising algorithms implemented in the `EBImage` package,
+and uses the `dplyr` package to manipulate the image matrices for proper
+downstream analysis. The `thresholdSegmentation` function uses the
+auto-thresholding function from `autothresholdr` to perform segmentation
+with various methods. Similarly, the `viewSegmentation` function also
+uses the `autothresholdr` package to perform segmentation, then displays
+the masks using the \``ggplot2` package. The helper function
+`compareGroundTruth` also uses the `ggplot2` package to return a plot
+comparing segmentation accuracy between methods. All functions use the
+`ijtiff` package to read in and write out .tif files. The idea to use
+the Dice coefficient as an accuracy metric when comparing the
+segmentation results against the ground truth is the author’s own.
+Generative AI was used to help with code optimisation and debugging, by
+pasting error codes and asking for suggestions on how to fix them.
 
 ## References
 
-    Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie, Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny: Web Application Framework for R. https://CRAN.R-project.org/package=shiny
+Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie,
+Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny:
+Web Application Framework for R.
+<https://CRAN.R-project.org/package=shiny>
 
-    conditionalPanel demo. (n.d.) Shiny. https://shiny.posit.co/r/gallery/dynamic-user-interface/conditionalpanel-demo/
+conditionalPanel demo. (n.d.) Shiny.
+<https://shiny.posit.co/r/gallery/dynamic-user-interface/conditionalpanel-demo/>
 
-    Dice, L. R. (1945). Measures of the amount of ecological association between species. Ecology, 26(3), 297-302. https://doi.org/10.2307/1932409
+Dice, L. R. (1945). Measures of the amount of ecological association
+between species. Ecology, 26(3), 297-302.
+<https://doi.org/10.2307/1932409>
 
-    File Upload. (n.d.) Shiny. https://shiny.posit.co/r/gallery/widgets/file-upload/
+File Upload. (n.d.) Shiny.
+<https://shiny.posit.co/r/gallery/widgets/file-upload/>
 
-    Glasbey, C. A. (1993). An analysis of histogram-based thresholding algorithms. CVGIP: Graphical Models and Image Processing, 55(6), 532-537. https://doi.org/10.1006/cgip.1993.1040
+Glasbey, C. A. (1993). An analysis of histogram-based thresholding
+algorithms. CVGIP: Graphical Models and Image Processing, 55(6),
+532-537. <https://doi.org/10.1006/cgip.1993.1040>
 
-    Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010). EBImage - an R package for image processing with applications to cellular phenotypes. Bioinformatics, 26(7), 979-981. https://doi.org/10.1093/bioinformatics/btq046
+Pau, G., Fuchs, F., Sklyar, O., Boutros, M., & Huber W. (2010).
+EBImage - an R package for image processing with applications to
+cellular phenotypes. Bioinformatics, 26(7), 979-981.
+<https://doi.org/10.1093/bioinformatics/btq046>
 
-    Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the measures of fuzziness. Pattern Recognition, 28(1), 41-51. https://doi.org/10.1016/0031-3203(94)E0043-K.
+Huang, L., & Wang, M. J. (1995). Image thresholding by minimizing the
+measures of fuzziness. Pattern Recognition, 28(1), 41-51.
+<https://doi.org/10.1016/0031-3203(94)E0043-K>.
 
-    Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal Processing, 27(1), 13-18. https://doi.org/10.1109/TASSP.1979.1163188
+Huang, T., Yang, G., & Tang, G. (1979). A fast two-dimensional median
+filtering algorithm. IEEE Transactions on Acoustics, Speech, and Signal
+Processing, 27(1), 13-18. <https://doi.org/10.1109/TASSP.1979.1163188>
 
-    Ke, Z., Oton, J., Qu, K., Cortese, M., Zila, V., McKeane, L., Nakane, T., Zivanov, J., Neufeldt, C. J., Cerikan, B., Lu, J. M., Peukes, J., Xiong, X., Kräusslich, H., Scheres, S. H. W., Bartenschlager, R., & Briggs, J. A. G. (2020). Structured and distributions of SARS-CoV-2 spike proteins on intact virions. Nature, 588, 498-502. https://doi.org/10.1038/s41586-020-2665-2
+Ke, Z., Oton, J., Qu, K., Cortese, M., Zila, V., McKeane, L., Nakane,
+T., Zivanov, J., Neufeldt, C. J., Cerikan, B., Lu, J. M., Peukes, J.,
+Xiong, X., Kräusslich, H., Scheres, S. H. W., Bartenschlager, R., &
+Briggs, J. A. G. (2020). Structured and distributions of SARS-CoV-2
+spike proteins on intact virions. Nature, 588, 498-502.
+<https://doi.org/10.1038/s41586-020-2665-2>
 
-    Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic thresholding from the gradients of region boundaries. Journal of Microscopy, 265(2), 185-195. https://doi.org/10.1111/jmi.12474
+Landini, G., Randell, D. A., Fouad, S., & Galton, A. (2017). Automatic
+thresholding from the gradients of region boundaries. Journal of
+Microscopy, 265(2), 185-195. <https://doi.org/10.1111/jmi.12474>
 
-    Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings of the Royal Society B: Biological Sciences, 207(1167): 187-217. https://doi.org/10.1098/rspb.1980.0020
+Marr, D., & Hildreth, E. (1980). Theory of edge detection. Proceedings
+of the Royal Society B: Biological Sciences, 207(1167): 187-217.
+<https://doi.org/10.1098/rspb.1980.0020>
 
-    Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633. https://doi.org/10.21105/joss.00633
+Nolan, R., & Padilla-Parra, S. (2018). ijtiff: An R package providing
+TIFF I/O for ImageJ users. Journal of Open Source Software, 3(23), 633.
+<https://doi.org/10.21105/joss.00633>
 
-    Otsu, N. (1979). A threshold selection method from gray-level histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66. https://doi.org/10.1109/TSMC.1979.4310076
+Otsu, N. (1979). A threshold selection method from gray-level
+histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1),
+62-66. <https://doi.org/10.1109/TSMC.1979.4310076>
 
-    Tabsets. (n.d.) Shiny. https://shiny.posit.co/r/gallery/application-layout/tabsets/
+Tabsets. (n.d.) Shiny.
+<https://shiny.posit.co/r/gallery/application-layout/tabsets/>
 
-    Weickert, J. (1998). Anisotropic diffusion in image processing. Stuttgart: Teubner.
+Weickert, J. (1998). Anisotropic diffusion in image processing.
+Stuttgart: Teubner.
 
-    Wickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag New York. https://ggplot2.tidyverse.org
+Wickham, H. (2016). ggplot2: Elegant graphics for data analysis.
+Springer-Verlag New York. <https://ggplot2.tidyverse.org>
 
-    Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. https://CRAN.R-project.org/package=dplyr
+Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023).
+dplyr: A grammar of data manipulation.
+<https://CRAN.R-project.org/package=dplyr>
 
-    Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry, 25(7), 741-753. https://doi.org/10.1177/25.7.70454
+Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement
+of sister chromatid exchange frequency. Journal of Histochemistry &
+Cytochemistry, 25(7), 741-753. <https://doi.org/10.1177/25.7.70454>
 
 ## Acknowledgements
 

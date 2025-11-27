@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# cryoCompare: comparisons for cryo-ET segmentation and denoising algorithms
+# cryoCompare
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -43,35 +43,34 @@ runcryoCompare()
 ```
 
 ## Overview
+`cryoCompare` contains 5 functions:
+
+1. ***runPipeline*** will run all of the following functions on the user-provided tomogram read in .tif format, allowing users to choose the segmentation algorithms to apply. It will then denoise, segment, outputting the masks from the segmentation methods. If ground-truth data is provided, it will also output a summary table and plot of Dice coefficients for each method.
+
+2. ***runDenoising*** will apply denoising algorithms to the user-provided tomogram read in .tif format, with parameters customisable by the user. This function will return a list of denoised images using Gaussian and Median diffusion filters. It will also save the denoised images as .tif files in the user-provided directory, or in "inst/extdata" otherwise.
+
+3. ***runSegmentation*** will apply the user-selected segmentation algorithms to the user-provided tomogram read in .tif format. Users can also choose to include ground-truth data to compare segmentation accuracy using the Dice coefficient. This function will output masks from each segmentation method, as well as a summary table and plot of Dice coefficients if ground-truth data is provided (same as runPipeline).
+
+4. ***thresholdSegmentation*** will apply the user-selected segmentation algorithms to the user-provided tomogram read in .tif format. This function will output masks that can be visualised, and threshold values used for each method.
+
+5. ***viewSegmentation*** will visualise the segmented masks for each user-selected segmentation method on the user-provided tomogram read in .tif format. This function displays a ggplot object of the masks for each method.
+
+For examples on how to use each function, refer to the package vignette.
+
 ``` r
 ls("package:cryoCompare")
 data(package = "cryoCompare")
 browseVignettes("cryoCompare")
 ```
 
-`cryoCompare` contains 5 functions:
-
-1. ***runPipeline*** for running the complete denoising and segmentation pipeline
-
-2. ***runDenoising*** for applying denoising algorithms to tomograms
-
-3. ***runSegmentation*** for applying segmentation algorithms to tomograms
-
-4. ***thresholdSegmentation*** for threshold-based segmentation of tomograms
-
-5. ***viewSegmentation*** for visualising segmentation results
-
 The package contains some sample data from the CZ Biohub. Refer to the package vignettes for more details. An overview of the package is illustrated below.
 
 ![](./inst/extdata/readme_img.png)
 
 ## Contributions
-The author of this package is Jeremy Chan. This project depends on and builds upon several open‑source R packages whose functions and algorithms are used throughout the implementation and analysis logic, particularly EBImage (image processing), ijtiff (TIFF I/O), autothresholdr (automatic thresholding), ggplot2 and base R (visualisation), and other CRAN/Bioconductor packages used for data manipulation and computation (e.g., dplyr). Credit for those functions, algorithms, and helper utilities belongs to their respective package authors; their contributions made the implementation, performance comparisons, and many analysis choices possible. The example data is derived from the Cryo‑ET Data Portal by CZ Biohub (Ke et al., 2018). Generative AI was used only for proofreading, code optimisation suggestions, and documentation assistance.
-
-All higher‑level design decisions, original analysis logic, algorithms, and the organisation of code in this repository are of the author's ideas. I wrote the core functions (runPipeline, runDenoising, runSegmentation, thresholdSegmentation, viewSegmentation, .compareGroundTruth), designed the end‑to‑end pipeline to standardise comparisons across denoising and segmentation methods, implemented input/output and preprocessing for tomograms and paired ground‑truth data, and created examples and vignettes to demonstrate use. I also added unit tests, example data, documentation, and package metadata to make the project easy to install and reproduce.
+The author of this package is Jeremy Chan. The `runDenoising` function utilises the denoising algorithms implemented in the `EBImage` package, and uses the `dplyr` package to manipulate the image matrices for proper downstream analysis. The `thresholdSegmentation` function uses the auto-thresholding function from `autothresholdr` to perform segmentation with various methods. Similarly, the `viewSegmentation` function also uses the `autothresholdr` package to perform segmentation, then displays the masks using the ``ggplot2` package. The helper function `compareGroundTruth` also uses the `ggplot2` package to return a plot comparing segmentation accuracy between methods. All functions use the `ijtiff` package to read in and write out .tif files. The idea to use the Dice coefficient as an accuracy metric when comparing the segmentation results against the ground truth is the author's own. Generative AI was used to help with code optimisation and debugging, by pasting error codes and asking for suggestions on how to fix them.
 
 ## References
-```
 Chang, W., Cheng, J., Allaire, J. J., Sievert, C., Schloerke, B., Xie, Y., Allen, J., McPherson, J., Dipert, A., & Borges, B. (2025). shiny: Web Application Framework for R. https://CRAN.R-project.org/package=shiny
 
 conditionalPanel demo. (n.d.) Shiny. https://shiny.posit.co/r/gallery/dynamic-user-interface/conditionalpanel-demo/
@@ -107,7 +106,6 @@ Wickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag
 Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. https://CRAN.R-project.org/package=dplyr
 
 Zack, G. W., Rogers, W. E., & Latt, S. A. (1977). Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry, 25(7), 741-753. https://doi.org/10.1177/25.7.70454
-```
 
 ## Acknowledgements
 This package was developed as part of an assessment for Fall 2025 BCB410H: Applied Bioinformatics course at the University of Toronto. `cryoCompare` welcome issues, enhancement requests, and other contributions. To submit an issue, use GitHub issues. 
