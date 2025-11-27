@@ -76,11 +76,11 @@ runDenoising <- function(image, output_dir = NULL,
   message(sprintf("Running denoising algorithms...\n"))
   gaussian_denoise <- EBImage::gblur(image, sigma = gaussian_sigma)
   ijtiff::display(gaussian_denoise)
-  title(paste("Gaussian denoising, sigma = ", gaussian_sigma))
+  graphics::title(paste("Gaussian denoising, sigma = ", gaussian_sigma))
 
   median_denoise <- EBImage::medianFilter(image, size = median_size)
   ijtiff::display(median_denoise)
-  title(paste("Median denoising, size = ", median_size))
+  graphics::title(paste("Median denoising, size = ", median_size))
 
   # Store denoised images in a list for return
   results <- list(

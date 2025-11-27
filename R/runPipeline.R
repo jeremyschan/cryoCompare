@@ -53,14 +53,16 @@ runPipeline <- function(image,
     gaussian_choice <- read("Enter a value for Gaussian sigma: ")
     gaussian_choice <- as.numeric(gaussian_choice)
     while (is.na(gaussian_choice) || gaussian_choice <= 0) {
-      gaussian_choice <- read("Invalid input. Please enter a positive number for Gaussian sigma: ")
+      gaussian_choice <- read(
+        "Invalid input. Please enter a positive number for Gaussian sigma: ")
       gaussian_choice <- as.numeric(gaussian_choice)
     }
 
     median_choice <- read("Enter a value for Median filter size: ")
     median_choice <- as.numeric(median_choice)
     while (is.na(median_choice) || median_choice <= 0) {
-      median_choice <- read("Invalid input. Please enter a positive number for Median filter size: ")
+      median_choice <- read(
+        "Invalid input. Please enter a positive number for Median filter size: ")
       median_choice <- as.numeric(median_choice)
     }
   })
@@ -105,7 +107,19 @@ runPipeline <- function(image,
   return(results)
 }
 
-# Wrap base::readline() for testing
+#' Read User Input from Console
+#'
+#' This function reads user input from the console with a given prompt. It is a
+#' wrapper for the base R `readline` function. This function was created only
+#' for ease of testing and mocking during unit tests.
+#'
+#' @param prompt string to display as prompt for user input
+#'
+#' @examples
+#' # No examples: this function requires user input
+#'
+#' @returns Returns the user input as a string.
+
 read <- function(prompt = "") {
   return(base::readline(prompt))
 }
