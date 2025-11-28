@@ -35,7 +35,9 @@ ui <- fluidPage(
               then enter hyperparameters for denoising algorithms, and click 'Run denoising'.
               After denoising is complete, select one of the denoised images (or the original)
               for segmentation, choose segmentation methods, and click 'Run segmentation'.
-              Results for each step can be accessed by their respective tabs at the top."),
+              Results for each step can be accessed by their respective tabs at the top.
+              Test data is available in the /inst/extdata directory, with example tomogram
+              TS_001.133.tif and ground truth mask TS_001.133_ground_truth.tif."),
 
       # Inputs
       fileInput("tomogram",
