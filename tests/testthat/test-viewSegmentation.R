@@ -20,8 +20,8 @@ test_that("viewSegmentation errors for invalid method names", {
 
 # Test that plots are outputted
 test_that("viewSegmentation draws plots", {
-  img <- array(1:9, c(3, 3))
-  class(img) <- "ijtiff_img"
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())

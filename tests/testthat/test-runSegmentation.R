@@ -34,8 +34,8 @@ test_that("runSegmentation errors for invalid ground truth type", {
 
 # Integration tests
 test_that("runSegmentation runs end to end without ground truth", {
-  img <- array(1:9, c(3, 3))
-  class(img) <- "ijtiff_img"
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
@@ -55,11 +55,11 @@ test_that("runSegmentation runs end to end without ground truth", {
 })
 
 test_that("runSegmentation runs end to end with ground truth", {
-  img <- array(c(1, 2, 3, 4), dim = c(2, 2))
-  class(img) <- "ijtiff_img"
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
-  gt <- array(c(TRUE, FALSE, TRUE, FALSE), dim = c(2, 2))
-  class(gt) <- "ijtiff_img"
+  data("TS_001.133_ground_truth", package = "cryoCompare")
+  gt <- TS_001.133_ground_truth
 
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
