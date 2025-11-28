@@ -27,17 +27,22 @@ University of Singapore.
 
 ## Installation
 
-A package from Bioconductor (`EBImage`) is required for `cryoCompare` to
-run properly. To install the latest version of the package:
+To install the latest version of the package:
 
 ``` r
 install.packages("devtools")
-install.packages("BiocManager")
-BiocManager::install("EBImage")
 library("devtools")
-
 devtools::install_github("jeremyschan/cryoCompare", build_vignettes = TRUE)
 library("cryoCompare")
+```
+
+A package from Bioconductor (`EBImage`) is required for `cryoCompare` to
+run properly. If the package is not installed properly through the
+command above, please run:
+
+``` r
+install.packages("BiocManager")
+BiocManager::install("EBImage")
 ```
 
 To run the Shiny application:
