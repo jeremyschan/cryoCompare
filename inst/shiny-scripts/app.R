@@ -237,7 +237,7 @@ server <- function(input, output) {
         tags$div(
           tags$h4(method),
           tags$img(src = file.path("temp_images", seg_name),
-                   width = "100%")
+                   width = "50%")
         )
       })
     })
