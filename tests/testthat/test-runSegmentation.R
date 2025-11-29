@@ -10,8 +10,8 @@ test_that("runSegmentation errors for non ijtiff_img input", {
 })
 
 test_that("runSegmentation errors for invalid methods", {
-  img <- array(1:9, c(3, 3))
-  class(img) <- "ijtiff_img"
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   expect_error(
     runSegmentation(img, methods = "InvalidMethod"),
@@ -20,8 +20,8 @@ test_that("runSegmentation errors for invalid methods", {
 })
 
 test_that("runSegmentation errors for invalid ground truth type", {
-  img <- array(1:9, c(3, 3))
-  class(img) <- "ijtiff_img"
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   bad_gt <- matrix(1:9, nrow = 3)
 

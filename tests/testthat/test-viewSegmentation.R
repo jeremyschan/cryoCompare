@@ -10,10 +10,11 @@ test_that("viewSegmentation errors for non ijtiff_img input", {
 })
 
 test_that("viewSegmentation errors for invalid method names", {
-  fake_img <- structure(list(), class = "ijtiff_img")
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   expect_error(
-    viewSegmentation(fake_img, methods = "InvalidMethod"),
+    viewSegmentation(img, methods = "InvalidMethod"),
     "Invalid segmentation method. Choose from: Huang, Mean, Otsu, Triangle"
   )
 })

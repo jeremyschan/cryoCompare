@@ -10,20 +10,20 @@ test_that("thresholdSegmentation errors for non ijtiff_img input", {
 })
 
 test_that("thresholdSegmentation errors for invalid segmentation methods", {
-  fake_img <- structure(list(), class = "ijtiff_img")
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
 
   expect_error(
-    thresholdSegmentation(fake_img, methods = "InvalidMethod"),
+    thresholdSegmentation(img, methods = "InvalidMethod"),
     "Invalid segmentation method. Choose from: Huang, Mean, Otsu, Triangle"
   )
 })
 
 # Test output structure
 test_that("thresholdSegmentation returns correct structure", {
-  img <- array(
-    data = c(1, 2, 3, 4),
-    dim = c(2, 2)
-  )
+  data("TS_001.133", package = "cryoCompare")
+  img <- TS_001.133
+
   class(img) <- "ijtiff_img"
 
   methods <- c("Otsu", "Triangle")
