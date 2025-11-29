@@ -212,8 +212,8 @@ The package tree structure is provided below:
   |- LICENSE
   |- README
   |- data
-     |- TS_001.133.tif
-     |- TS_001.133_ground_truth.tif
+     |- TS_001.133.rda
+     |- TS_001.133_ground_truth.rda
   |- inst
      |- extdata
         |- readme_img.png
