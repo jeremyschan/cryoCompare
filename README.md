@@ -222,6 +222,7 @@ The package tree structure is provided below:
      |- shiny-scripts
         |- app.R
   |- man
+     |- read.Rd
      |- dot-compareGroundTruth.Rd
      |- runcryoCompare.Rd
      |- runDenoising.Rd
